@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Nunito } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
-const nunito = Nunito({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Umeko - Japanese Learning Platform",
