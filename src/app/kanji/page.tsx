@@ -3,12 +3,10 @@
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
 
-import { useTheme } from 'next-themes'
 import { Navigation } from '@/components/layout/Navigation'
 
 export default function KanjiPage() {
     const { t } = useLanguage()
-    const { theme } = useTheme()
 
     return (
         <>
