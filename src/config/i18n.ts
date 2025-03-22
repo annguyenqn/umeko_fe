@@ -82,6 +82,8 @@ export const translations = {
       learnMore: 'Learn More'
     },
     features: {
+      title: "Why Choose Umeko?",
+      subtitle: "Our platform combines cutting-edge technology with proven learning methods to help you master Japanese effectively.",
       kanji: {
         title: '漢字 Kanji Study',
         description: 'Master Japanese characters through structured learning paths',
@@ -97,6 +99,43 @@ export const translations = {
         description: 'Optimize your learning with spaced repetition',
         content: 'Our intelligent system tracks your progress and adjusts review timing to help you remember what you\'ve learned effectively.'
       }
+    },
+    howItWorks: {
+      title: "How It Works",
+      subtitle: "Start your Japanese learning journey in four simple steps",
+      step1: {
+        title: "Create Your Account",
+        description: "Sign up for free and set your learning goals"
+      },
+      step2: {
+        title: "Choose Your Path",
+        description: "Select from kanji, vocabulary, or both to focus on"
+      },
+      step3: {
+        title: "Learn & Practice",
+        description: "Engage with interactive lessons and exercises"
+      },
+      step4: {
+        title: "Track Progress",
+        description: "Monitor your improvement and stay motivated"
+      }
+    },
+    cta: {
+      title: "Ready to Start Learning?",
+      subtitle: "Join thousands of learners who are already mastering Japanese with Umeko",
+      button: "Get Started Now"
+    },
+    kanji: {
+      title: 'Japanese Vocabulary Learning',
+      n5: {
+        title: 'N5 - Vocabulary',
+        description: 'Comprehensive N5 level vocabulary, primarily following Minna no Nihongo I. Suitable for Japanese language beginners.'
+      },
+      n4: {
+          title: 'N4 -  Vocabulary',
+        description: 'N4 level vocabulary based on Minna no Nihongo II and supplementary materials. Helps consolidate and expand vocabulary after completing N5.'
+      },
+      startLearning: 'Start Learning'
     }
   },
   vi: {
@@ -173,6 +212,8 @@ export const translations = {
       learnMore: 'Tìm Hiểu Thêm'
     },
     features: {
+      title: "Tại sao chọn Umeko?",
+      subtitle: "Nền tảng của chúng tôi kết hợp công nghệ tiên tiến với phương pháp học tập đã được chứng minh để giúp bạn thành thạo tiếng Nhật một cách hiệu quả.",
       kanji: {
         title: '漢字 Kanji',
         description: 'Làm chủ chữ Hán qua lộ trình học có cấu trúc',
@@ -188,6 +229,43 @@ export const translations = {
         description: 'Tối ưu hóa việc học với phương pháp lặp lại ngắt quãng',
         content: 'Hệ thống thông minh của chúng tôi theo dõi tiến độ và điều chỉnh thời gian ôn tập để giúp bạn ghi nhớ hiệu quả những gì đã học.'
       }
+    },
+    howItWorks: {
+      title: "Cách Hoạt Động",
+      subtitle: "Bắt đầu hành trình học tiếng Nhật của bạn chỉ trong bốn bước đơn giản",
+      step1: {
+        title: "Tạo Tài Khoản",
+        description: "Đăng ký miễn phí và thiết lập mục tiêu học tập"
+      },
+      step2: {
+        title: "Chọn Lộ Trình",
+        description: "Chọn học kanji, từ vựng hoặc cả hai"
+      },
+      step3: {
+        title: "Học & Luyện Tập",
+        description: "Tham gia các bài học và bài tập tương tác"
+      },
+      step4: {
+        title: "Theo Dõi Tiến Độ",
+        description: "Giám sát sự tiến bộ và duy trì động lực"
+      }
+    },
+    cta: {
+      title: "Sẵn Sàng Bắt Đầu Học?",
+      subtitle: "Tham gia cùng hàng ngàn người học đang thành thạo tiếng Nhật với Umeko",
+      button: "Bắt Đầu Ngay"
+    },
+    kanji: {
+      title: 'Học Từ Vựng Tiếng Nhật',
+      n5: {
+        title: 'N5 - Từ vựng',
+        description: 'Tổng hợp từ vựng trình độ N5, chủ yếu theo giáo trình Minna no Nihongo I. Phù hợp cho người mới bắt đầu học tiếng Nhật.'
+      },
+      n4: {
+        title: 'N4 - Từ vựng',
+        description: 'Từ vựng trình độ N4, dựa trên Minna no Nihongo II. Giúp củng cố và mở rộng vốn từ sau khi hoàn thành N5.'
+      },
+      startLearning: 'Bắt đầu học'
     }
   }
 } as const; 

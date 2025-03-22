@@ -20,8 +20,8 @@ export function Navigation() {
                     {/* Logo and Brand */}
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center space-x-2">
-                            <span className="inline-block font-bold">梅子</span>
-                            <span className="inline-block font-bold">Umeko</span>
+                            {/* <span className="inline-block font-bold">梅子</span> */}
+                            <span className="inline-block font-bold">UMEKO</span>
                         </Link>
                     </div>
 
