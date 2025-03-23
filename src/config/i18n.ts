@@ -136,6 +136,21 @@ export const translations = {
         description: 'N4 level vocabulary based on Minna no Nihongo II and supplementary materials. Helps consolidate and expand vocabulary after completing N5.'
       },
       startLearning: 'Start Learning'
+    },
+    vocab: {
+      n5: {
+        title: 'N5 Vocabulary',
+      },
+      n4: {
+        title: 'N4 Vocabulary',
+      },
+      totalLessons_1: '1 lesson',
+      totalLessons_2: '2 lessons',
+      words_30: '30 words',
+      words_35: '35 words',
+      words_40: '40 words',
+      words_45: '45 words',
+      lesson: 'Lesson',
     }
   },
   vi: {
@@ -266,6 +281,21 @@ export const translations = {
         description: 'Từ vựng trình độ N4, dựa trên Minna no Nihongo II. Giúp củng cố và mở rộng vốn từ sau khi hoàn thành N5.'
       },
       startLearning: 'Bắt đầu học'
+    },
+    vocab: {
+      n5: {
+        title: 'Từ vựng N5',
+      },
+      n4: {
+        title: 'Từ vựng N4',
+      },
+      totalLessons_1: '1 bài học',
+      totalLessons_2: '2 bài học',
+      words_30: '30 từ vựng',
+      words_35: '35 từ vựng',
+      words_40: '40 từ vựng',
+      words_45: '45 từ vựng',
+      lesson: 'Bài',
     }
   }
 } as const; 

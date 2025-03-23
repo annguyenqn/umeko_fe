@@ -2,7 +2,6 @@
 
 import { LoginForm } from "@/components/auth/LoginForm"
 import { Container } from "@/components/ui/container"
-import { Navigation } from "@/components/layout/Navigation"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { Nunito } from "next/font/google"
 
@@ -13,7 +12,6 @@ export default function LoginPage() {
 
     return (
         <>
-            <Navigation />
             <Container className="flex min-h-[calc(100vh-4rem)] items-center justify-center py-6 px-4 sm:px-6 lg:px-8">
                 <div className="w-full max-w-md">
                     <div className="mb-6 sm:mb-8 text-center">

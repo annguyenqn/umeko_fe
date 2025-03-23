@@ -1,6 +1,5 @@
 'use client'
 
-import { Navigation } from "@/components/layout/Navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Container } from "@/components/ui/container"
@@ -13,7 +12,6 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navigation />
       <BackgroundBeams />
       <main className="flex-1">
         {/* Hero Section with Beam Background */}
