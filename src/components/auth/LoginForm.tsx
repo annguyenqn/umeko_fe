@@ -11,12 +11,17 @@ import { Label } from "@/components/ui/label"
 import { useLanguage } from "@/contexts/LanguageContext"
 import { Nunito } from "next/font/google"
 import { createLoginSchema, type LoginFormData } from "@/lib/validations/auth"
+import { toast } from "sonner"
+import { useAuthStore } from "@/store/useAuthStore"
+import { useRouter } from 'next/navigation'
 
 const nunito = Nunito({ subsets: ["latin"] })
-
 export function LoginForm() {
+    const router = useRouter()
     const [showPassword, setShowPassword] = useState(false)
     const { t } = useLanguage()
+    // const router = useRouter()
+    const { login } = useAuthStore()
 
     const {
         register,
@@ -30,15 +35,19 @@ export function LoginForm() {
             rememberMe: false,
         },
     })
-
-    const onSubmit = async (data: LoginFormData) => {
+    const onSubmit = async (loginDataForm: LoginFormData) => {
         try {
-            // TODO: Implement login logic
-            console.log(data)
-        } catch (error) {
-            console.error(error)
+            const { email, password } = loginDataForm
+            await login(email, password, router)
+        } catch (error: any) {
+            const errorMsg =
+                error?.response?.data?.message || "Đã có lỗi xảy ra, vui lòng thử lại!"
+            toast.error("Đăng nhập thất bại", {
+                description: errorMsg,
+            })
         }
     }
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

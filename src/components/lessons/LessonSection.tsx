@@ -30,7 +30,7 @@ export function LessonSection({ level, lessons }: LessonSectionProps) {
                     {lessons.map((lesson) => (
                         <Link
                             key={lesson.id}
-                            href={`/kanji/${level.toLowerCase()}/${lesson.id}`}
+                            href={`/vocabulary/${level.toLowerCase()}/${lesson.id}`}
                             className="transition-transform hover:-translate-y-1"
                         >
                             <Card className="p-6 h-full hover:shadow-lg transition-shadow">
@@ -52,7 +52,7 @@ export function LessonSection({ level, lessons }: LessonSectionProps) {
                                     <div className="mt-auto">
                                         <div className="flex items-center justify-between text-sm mb-2">
                                             <span>
-                                                {`${lesson.vocab.length} ${t('vocab.words')}`}
+                                                {`${t('vocab.vocab_total')} ${lesson.vocab.length}`}
                                             </span>
                                             <span className="text-primary">
                                                 50%

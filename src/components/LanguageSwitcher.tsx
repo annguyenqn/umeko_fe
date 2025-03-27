@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { languages } from "@/config/i18n"
+'use client'
+
 import { useLanguage } from "@/contexts/LanguageContext"
+import { Button } from "@/components/ui/button"
+import { Languages } from "lucide-react"
 
 export function LanguageSwitcher() {
     const { language, setLanguage } = useLanguage()
@@ -12,12 +14,36 @@ export function LanguageSwitcher() {
     return (
         <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={toggleLanguage}
-            className="flex items-center gap-2"
+            className="w-9 px-0"
         >
-            <span>{languages[language].flag}</span>
-            <span className="hidden sm:inline-block">{languages[language].label}</span>
+            {language === 'en' ? (
+                <span className="text-lg">🇺🇸</span>
+            ) : (
+                <span className="text-lg">🇻🇳</span>
+            )}
+        </Button>
+    )
+}
+
+// Alternative version using Lucide icons instead of flags
+export function LanguageSwitcherAlt() {
+    const { language, setLanguage } = useLanguage()
+
+    const toggleLanguage = () => {
+        setLanguage(language === 'en' ? 'vi' : 'en')
+    }
+
+    return (
+        <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleLanguage}
+            className="w-9 px-0"
+            title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
+        >
+            <Languages className="h-4 w-4" />
         </Button>
     )
 } 

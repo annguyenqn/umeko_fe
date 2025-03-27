@@ -1,3 +1,4 @@
+// 📁 stores/useStore.ts
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { Language, defaultLanguage } from '@/config/i18n'
@@ -9,16 +10,6 @@ interface UserPreferences {
   dailyGoal: number
 }
 
-interface AuthState {
-  isAuthenticated: boolean
-  user: {
-    id: string
-    name: string
-    email: string
-    avatar?: string
-  } | null
-}
-
 interface StudyProgress {
   totalKanjiLearned: number
   totalVocabLearned: number
@@ -27,11 +18,6 @@ interface StudyProgress {
 }
 
 interface StoreState {
-  // Auth State
-  auth: AuthState
-  setAuth: (auth: AuthState) => void
-  logout: () => void
-
   // User Preferences
   preferences: UserPreferences
   setPreferences: (preferences: Partial<UserPreferences>) => void
@@ -49,17 +35,7 @@ interface StoreState {
 export const useStore = create<StoreState>()(
   persist(
     (set) => ({
-      // Auth State
-      auth: {
-        isAuthenticated: false,
-        user: null,
-      },
-      setAuth: (auth) => set({ auth }),
-      logout: () => set({ 
-        auth: { isAuthenticated: false, user: null },
-      }),
-
-      // User Preferences
+      // Preferences
       preferences: {
         theme: 'system',
         language: defaultLanguage,
@@ -109,7 +85,6 @@ export const useStore = create<StoreState>()(
           const today = new Date().toISOString().split('T')[0]
           const lastStudyDate = state.progress.lastStudyDate
           
-          // If this is the first study session or it's a new day
           if (!lastStudyDate || lastStudyDate !== today) {
             return {
               progress: {
@@ -126,9 +101,8 @@ export const useStore = create<StoreState>()(
       name: 'umeko-storage',
       partialize: (state) => ({
         preferences: state.preferences,
-        auth: state.auth,
         progress: state.progress,
       }),
     }
   )
-) 
+)

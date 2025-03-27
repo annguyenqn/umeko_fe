@@ -14,6 +14,7 @@ export const translations = {
       vocabulary: 'Vocabulary',
       study: 'Study',
       login: 'Login',
+      logout: 'Logout',
       signup: 'Sign Up'
     },
     login: {
@@ -125,7 +126,7 @@ export const translations = {
       subtitle: "Join thousands of learners who are already mastering Japanese with Umeko",
       button: "Get Started Now"
     },
-    kanji: {
+    vocabCard: {
       title: 'Japanese Vocabulary Learning',
       n5: {
         title: 'N5 - Vocabulary',
@@ -146,7 +147,7 @@ export const translations = {
       },
       totalLessons_1: '1 lesson',
       totalLessons_2: '2 lessons',
-      words_30: '30 words',
+      vocab_total: 'Vocab total',
       words_35: '35 words',
       words_40: '40 words',
       words_45: '45 words',
@@ -159,6 +160,7 @@ export const translations = {
       vocabulary: 'Từ Vựng',
       study: 'Học Tập',
       login: 'Đăng Nhập',
+      logout: 'Đăng xuất',
       signup: 'Đăng Ký'
     },
     login: {
@@ -270,7 +272,7 @@ export const translations = {
       subtitle: "Tham gia cùng hàng ngàn người học đang thành thạo tiếng Nhật với Umeko",
       button: "Bắt Đầu Ngay"
     },
-    kanji: {
+    vocabCard: {
       title: 'Học Từ Vựng Tiếng Nhật',
       n5: {
         title: 'N5 - Từ vựng',
@@ -291,7 +293,7 @@ export const translations = {
       },
       totalLessons_1: '1 bài học',
       totalLessons_2: '2 bài học',
-      words_30: '30 từ vựng',
+      vocab_total: 'Tổng từ vựng',
       words_35: '35 từ vựng',
       words_40: '40 từ vựng',
       words_45: '45 từ vựng',

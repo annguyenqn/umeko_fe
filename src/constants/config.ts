@@ -1,9 +1,10 @@
 export const APP_CONFIG = {
   name: 'Umeko',
   description: 'Next.js Application',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  apiUrl: process.env.NEXT_PUBLIC_API_URL,
-} as const;
+  frontendUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
+  frontendApiUrl: process.env.NEXT_PUBLIC_API_URL, // Next.js API routes
+  backendApiUrl: process.env.NEXT_PUBLIC_NEST_API_URL,  // NestJS API
+} as const
 
 export const ROUTES = {
   HOME: '/',
@@ -18,7 +19,7 @@ export const META = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: APP_CONFIG.url,
+    url: APP_CONFIG.frontendUrl,
     siteName: APP_CONFIG.name,
   },
 } as const; 
