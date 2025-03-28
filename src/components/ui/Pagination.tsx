@@ -1,7 +1,7 @@
-
 'use client'
 import { ArrowRight, ArrowLeft } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
+
 const Pagination = ({
     totalItems,
     currentIndex,
@@ -11,17 +11,18 @@ const Pagination = ({
     currentIndex: number;
     onChange: (index: number) => void;
 }) => {
-    const handleNextItem = () => {
+    const handleNextItem = useCallback(() => {
         if (currentIndex < totalItems - 1) {
             onChange(currentIndex + 1);
         }
-    };
+    }, [currentIndex, totalItems, onChange]);
 
-    const handlePreviousItem = () => {
+    const handlePreviousItem = useCallback(() => {
         if (currentIndex > 0) {
             onChange(currentIndex - 1);
         }
-    };
+    }, [currentIndex, onChange]);
+
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === "ArrowRight") {
@@ -36,7 +37,7 @@ const Pagination = ({
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [currentIndex, totalItems]);
+    }, [handleNextItem, handlePreviousItem]);
 
     return (
         <div className="flex items-center space-x-4">

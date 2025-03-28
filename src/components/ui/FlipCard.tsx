@@ -1,13 +1,22 @@
-'use client';
-import React, { useEffect, useCallback } from "react";
+"use client";
 
-const FlipCard = ({ frontContent, backContent, axis = "x", flipped, setFlipped }) => {
+import React, { useEffect, useCallback, ReactElement } from "react";
+
+interface FlipCardProps {
+    frontContent: ReactElement; // vì bạn luôn truyền vào 1 element <h2> hoặc <div>
+    backContent: ReactElement;
+    axis?: "x" | "y";
+    flipped: boolean;
+    setFlipped: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const FlipCard: React.FC<FlipCardProps> = ({ frontContent, backContent, axis = "x", flipped, setFlipped }) => {
     const handleFlip = useCallback(() => {
         setFlipped(prev => !prev);
     }, [setFlipped]);
 
     useEffect(() => {
-        const handleKeyDown = (e) => {
+        const handleKeyDown = (e: KeyboardEvent) => {
             if (e.code === "Space") {
                 e.preventDefault();
                 handleFlip();

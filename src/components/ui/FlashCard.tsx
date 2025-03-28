@@ -46,6 +46,7 @@ const FlashCard: React.FC<FlashCardProps> = ({ kanjiItems, t, language }) => {
         const shuffled = [...shuffledKanjiItems]
             .map((item) => ({ ...item, random: Math.random() }))
             .sort((a, b) => a.random - b.random)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .map(({ random, ...item }) => item);
         setShuffledKanjiItems(shuffled);
         setCurrentItem(0);

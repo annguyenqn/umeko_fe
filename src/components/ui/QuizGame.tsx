@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,14 +22,8 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
     const [correctCount, setCorrectCount] = useState(0);
     const [questionIndex, setQuestionIndex] = useState(1);
 
-    useEffect(() => {
-        if (vocabItems.length > 0) {
-            setRemainingQuestions([...vocabItems]);
-            generateQuestion();
-        }
-    }, [vocabItems]);
 
-    const generateQuestion = () => {
+    const generateQuestion = useCallback(() => {
         if (remainingQuestions.length === 0) return;
 
         const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
@@ -49,8 +43,14 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
         setSelectedAnswer(null);
         setIsCorrect(null);
         setRemainingQuestions(prev => prev.filter(item => item.id !== selectedQuestion.id));
-    };
+    }, [remainingQuestions, vocabItems]);
 
+    useEffect(() => {
+        if (vocabItems.length > 0) {
+            setRemainingQuestions([...vocabItems]);
+            generateQuestion();
+        }
+    }, [vocabItems, generateQuestion]);
     const handleAnswer = (answer: string) => {
         const correct = answer === currentQuestion?.vocab;
         setSelectedAnswer(answer);
