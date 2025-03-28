@@ -152,6 +152,21 @@ export const translations = {
       words_40: '40 words',
       words_45: '45 words',
       lesson: 'Lesson',
+      listVocab: 'List vocabs',
+      flashcard: 'Flash card',
+      TestVocab: 'Test vocab'
+    },
+    flashCard:{
+      mean: 'Mean',
+      mix: 'Mix'
+    },
+    "quiz": {
+      "resultTitle": "Result",
+      "correctCount": "Correct answers: ",
+      "wrongCount": "Wrong answers: ",
+      "retry": "Try again",
+      "next": 'Next Question',
+      "mean": 'Mean',
     }
   },
   vi: {
@@ -298,6 +313,21 @@ export const translations = {
       words_40: '40 từ vựng',
       words_45: '45 từ vựng',
       lesson: 'Bài',
+      listVocab: 'Danh sách từ vựng',
+      flashcard: 'Thẻ ghi nhớ',
+      TestVocab: 'Kiểm tra từ vựng'
+    },
+    flashCard:{
+      mean: 'Nghĩa',
+      mix: 'Xáo trộn'
+    },
+    "quiz": {
+      "resultTitle": "Kết quả",
+      "correctCount": "Số câu đúng: ",
+      "wrongCount": "Số câu sai: ",
+      "retry": "Làm lại",
+      "next": 'Câu tiếp theo',
+      "mean": "Nghĩa"
     }
   }
 } as const; 

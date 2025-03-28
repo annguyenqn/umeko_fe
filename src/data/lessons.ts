@@ -10,75 +10,228 @@ export const N5_LESSONS: LessonDetail[] = [
     description_en: "Self-introduction and basic greetings.",
     vocab: [
       {
-        id: "1",
-        vocab: "こんにちは",
-        furigana: "こんにちは",
-        mean_vi: "Xin chào",
-        mean_en: "Hello",
-        example: [
+        id: 1,
+        vocab: "学生",
+        furigana: "がくせい",
+        meaning_vi: "học sinh, sinh viên",
+        meaning_en: "student",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "こんにちは、元気ですか？",
-            meaning_vi: "Xin chào, bạn khỏe không?",
-            meaning_en: "Hello, how are you?"
-          }
-        ]
+            id: 101,
+            kanji: "学",
+            kun_reading: ["まな.ぶ"],
+            on_reading: ["ガク"],
+            han_viet: "HỌC",
+            meaning_vi: "học",
+            meaning_en: "study",
+            radicals: "子",
+            strokes: 8,
+            level: "N5",
+            examples: [
+              {
+                example_text: "日本語を学ぶ。",
+                example_furigana: "にほんごをまなぶ。",
+                meaning_vi: "Học tiếng Nhật.",
+                meaning_en: "Study Japanese.",
+              },
+            ],
+          },
+          {
+            id: 102,
+            kanji: "生",
+            kun_reading: ["い.きる", "う.まれる"],
+            on_reading: ["セイ", "ショウ"],
+            han_viet: "SINH",
+            meaning_vi: "sống, sinh ra",
+            meaning_en: "life, birth",
+            radicals: "生",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "私は学生です。",
+            example_furigana: "わたしはがくせいです。",
+            meaning_vi: "Tôi là sinh viên.",
+            meaning_en: "I am a student.",
+          },
+        ],
       },
       {
-        id: "2",
-        vocab: "ありがとう",
-        furigana: "ありがとう",
-        mean_vi: "Cảm ơn",
-        mean_en: "Thank you",
-        example: [
+        id: 2,
+        vocab: "先生",
+        furigana: "せんせい",
+        meaning_vi: "giáo viên",
+        meaning_en: "teacher",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "手伝ってくれてありがとう。",
-            meaning_vi: "Cảm ơn vì đã giúp đỡ.",
-            meaning_en: "Thank you for helping me."
-          }
-        ]
+            id: 103,
+            kanji: "先",
+            kun_reading: ["さき"],
+            on_reading: ["セン"],
+            han_viet: "TIÊN",
+            meaning_vi: "trước",
+            meaning_en: "before, ahead",
+            radicals: "儿",
+            strokes: 6,
+            level: "N5",
+          },
+          {
+            id: 104,
+            kanji: "生",
+            kun_reading: ["い.きる", "う.まれる"],
+            on_reading: ["セイ", "ショウ"],
+            han_viet: "SINH",
+            meaning_vi: "sống, sinh ra",
+            meaning_en: "life, birth",
+            radicals: "生",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "先生は優しいです。",
+            example_furigana: "せんせいはやさしいです。",
+            meaning_vi: "Thầy giáo rất hiền.",
+            meaning_en: "The teacher is kind.",
+          },
+        ],
       },
       {
-        id: "3",
-        vocab: "はじめまして",
-        furigana: "はじめまして",
-        mean_vi: "Rất vui được gặp bạn (lần đầu)",
-        mean_en: "Nice to meet you",
-        example: [
+        id: 3,
+        vocab: "水",
+        furigana: "みず",
+        meaning_vi: "nước",
+        meaning_en: "water",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "はじめまして、田中です。",
-            meaning_vi: "Rất vui được gặp bạn, tôi là Tanaka.",
-            meaning_en: "Nice to meet you, I'm Tanaka."
-          }
-        ]
+            id: 105,
+            kanji: "水",
+            kun_reading: ["みず"],
+            on_reading: ["スイ"],
+            han_viet: "THỦY",
+            meaning_vi: "nước",
+            meaning_en: "water",
+            radicals: "水",
+            strokes: 4,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "水を飲みます。",
+            example_furigana: "みずをのみます。",
+            meaning_vi: "Tôi uống nước.",
+            meaning_en: "I drink water.",
+          },
+        ],
       },
       {
-        id: "4",
-        vocab: "さようなら",
-        furigana: "さようなら",
-        mean_vi: "Tạm biệt",
-        mean_en: "Goodbye",
-        example: [
+        id: 4,
+        vocab: "火曜日",
+        furigana: "かようび",
+        meaning_vi: "Thứ ba",
+        meaning_en: "Tuesday",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "学校が終わって、さようなら。",
-            meaning_vi: "Tan học rồi, tạm biệt nhé.",
-            meaning_en: "School is over, goodbye."
-          }
-        ]
+            id: 106,
+            kanji: "火",
+            kun_reading: ["ひ"],
+            on_reading: ["カ"],
+            han_viet: "HỎA",
+            meaning_vi: "lửa",
+            meaning_en: "fire",
+            radicals: "火",
+            strokes: 4,
+            level: "N5",
+          },
+          {
+            id: 107,
+            kanji: "曜",
+            kun_reading: [],
+            on_reading: ["ヨウ"],
+            han_viet: "DIỆU",
+            meaning_vi: "ngày trong tuần",
+            meaning_en: "day of the week",
+            radicals: "日",
+            strokes: 18,
+            level: "N4",
+          },
+          {
+            id: 108,
+            kanji: "日",
+            kun_reading: ["ひ", "び"],
+            on_reading: ["ニチ", "ジツ"],
+            han_viet: "NHẬT",
+            meaning_vi: "ngày, mặt trời",
+            meaning_en: "day, sun",
+            radicals: "日",
+            strokes: 4,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "火曜日に会いましょう。",
+            example_furigana: "かようびにあいましょう。",
+            meaning_vi: "Hẹn gặp vào thứ ba.",
+            meaning_en: "Let's meet on Tuesday.",
+          },
+        ],
       },
       {
-        id: "5",
-        vocab: "おはようございます",
-        furigana: "おはようございます",
-        mean_vi: "Chào buổi sáng",
-        mean_en: "Good morning",
-        example: [
+        id: 5,
+        vocab: "日本",
+        furigana: "にほん",
+        meaning_vi: "Nhật Bản",
+        meaning_en: "Japan",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "毎朝先生におはようございますと言います。",
-            meaning_vi: "Mỗi sáng tôi chào thầy giáo.",
-            meaning_en: "Every morning I say good morning to the teacher."
-          }
-        ]
-      }
+            id: 109,
+            kanji: "日",
+            kun_reading: ["ひ", "び"],
+            on_reading: ["ニチ", "ジツ"],
+            han_viet: "NHẬT",
+            meaning_vi: "ngày, mặt trời",
+            meaning_en: "day, sun",
+            radicals: "日",
+            strokes: 4,
+            level: "N5",
+          },
+          {
+            id: 110,
+            kanji: "本",
+            kun_reading: ["もと"],
+            on_reading: ["ホン"],
+            han_viet: "BẢN",
+            meaning_vi: "gốc, sách",
+            meaning_en: "origin, book",
+            radicals: "木",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "私は日本へ行きたいです。",
+            example_furigana: "わたしはにほんへいきたいです。",
+            meaning_vi: "Tôi muốn đến Nhật Bản.",
+            meaning_en: "I want to go to Japan.",
+          },
+        ],
+      },
     ]
   },
   {
@@ -90,75 +243,228 @@ export const N5_LESSONS: LessonDetail[] = [
     description_en: "Vocabulary about classroom objects and their locations.",
     vocab: [
       {
-        id: "1",
-        vocab: "つくえ",
-        furigana: "つくえ",
-        mean_vi: "Cái bàn",
-        mean_en: "Desk",
-        example: [
+        id: 1,
+        vocab: "学生",
+        furigana: "がくせい",
+        meaning_vi: "học sinh, sinh viên",
+        meaning_en: "student",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "つくえの上に本があります。",
-            meaning_vi: "Có một quyển sách trên bàn.",
-            meaning_en: "There is a book on the desk."
-          }
-        ]
+            id: 101,
+            kanji: "学",
+            kun_reading: ["まな.ぶ"],
+            on_reading: ["ガク"],
+            han_viet: "HỌC",
+            meaning_vi: "học",
+            meaning_en: "study",
+            radicals: "子",
+            strokes: 8,
+            level: "N5",
+            examples: [
+              {
+                example_text: "日本語を学ぶ。",
+                example_furigana: "にほんごをまなぶ。",
+                meaning_vi: "Học tiếng Nhật.",
+                meaning_en: "Study Japanese.",
+              },
+            ],
+          },
+          {
+            id: 102,
+            kanji: "生",
+            kun_reading: ["い.きる", "う.まれる"],
+            on_reading: ["セイ", "ショウ"],
+            han_viet: "SINH",
+            meaning_vi: "sống, sinh ra",
+            meaning_en: "life, birth",
+            radicals: "生",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "私は学生です。",
+            example_furigana: "わたしはがくせいです。",
+            meaning_vi: "Tôi là sinh viên.",
+            meaning_en: "I am a student.",
+          },
+        ],
       },
       {
-        id: "2",
-        vocab: "いす",
-        furigana: "いす",
-        mean_vi: "Cái ghế",
-        mean_en: "Chair",
-        example: [
+        id: 2,
+        vocab: "先生",
+        furigana: "せんせい",
+        meaning_vi: "giáo viên",
+        meaning_en: "teacher",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "いすにすわってください。",
-            meaning_vi: "Hãy ngồi vào ghế.",
-            meaning_en: "Please sit on the chair."
-          }
-        ]
+            id: 103,
+            kanji: "先",
+            kun_reading: ["さき"],
+            on_reading: ["セン"],
+            han_viet: "TIÊN",
+            meaning_vi: "trước",
+            meaning_en: "before, ahead",
+            radicals: "儿",
+            strokes: 6,
+            level: "N5",
+          },
+          {
+            id: 104,
+            kanji: "生",
+            kun_reading: ["い.きる", "う.まれる"],
+            on_reading: ["セイ", "ショウ"],
+            han_viet: "SINH",
+            meaning_vi: "sống, sinh ra",
+            meaning_en: "life, birth",
+            radicals: "生",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "先生は優しいです。",
+            example_furigana: "せんせいはやさしいです。",
+            meaning_vi: "Thầy giáo rất hiền.",
+            meaning_en: "The teacher is kind.",
+          },
+        ],
       },
       {
-        id: "3",
-        vocab: "ほん",
-        furigana: "ほん",
-        mean_vi: "Quyển sách",
-        mean_en: "Book",
-        example: [
+        id: 3,
+        vocab: "水",
+        furigana: "みず",
+        meaning_vi: "nước",
+        meaning_en: "water",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "このほんはとてもおもしろいです。",
-            meaning_vi: "Cuốn sách này rất thú vị.",
-            meaning_en: "This book is very interesting."
-          }
-        ]
+            id: 105,
+            kanji: "水",
+            kun_reading: ["みず"],
+            on_reading: ["スイ"],
+            han_viet: "THỦY",
+            meaning_vi: "nước",
+            meaning_en: "water",
+            radicals: "水",
+            strokes: 4,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "水を飲みます。",
+            example_furigana: "みずをのみます。",
+            meaning_vi: "Tôi uống nước.",
+            meaning_en: "I drink water.",
+          },
+        ],
       },
       {
-        id: "4",
-        vocab: "ペン",
-        furigana: "ペン",
-        mean_vi: "Cây bút",
-        mean_en: "Pen",
-        example: [
+        id: 4,
+        vocab: "火曜日",
+        furigana: "かようび",
+        meaning_vi: "Thứ ba",
+        meaning_en: "Tuesday",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "あたらしいペンをかいました。",
-            meaning_vi: "Tôi đã mua một cây bút mới.",
-            meaning_en: "I bought a new pen."
-          }
-        ]
+            id: 106,
+            kanji: "火",
+            kun_reading: ["ひ"],
+            on_reading: ["カ"],
+            han_viet: "HỎA",
+            meaning_vi: "lửa",
+            meaning_en: "fire",
+            radicals: "火",
+            strokes: 4,
+            level: "N5",
+          },
+          {
+            id: 107,
+            kanji: "曜",
+            kun_reading: [],
+            on_reading: ["ヨウ"],
+            han_viet: "DIỆU",
+            meaning_vi: "ngày trong tuần",
+            meaning_en: "day of the week",
+            radicals: "日",
+            strokes: 18,
+            level: "N4",
+          },
+          {
+            id: 108,
+            kanji: "日",
+            kun_reading: ["ひ", "び"],
+            on_reading: ["ニチ", "ジツ"],
+            han_viet: "NHẬT",
+            meaning_vi: "ngày, mặt trời",
+            meaning_en: "day, sun",
+            radicals: "日",
+            strokes: 4,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "火曜日に会いましょう。",
+            example_furigana: "かようびにあいましょう。",
+            meaning_vi: "Hẹn gặp vào thứ ba.",
+            meaning_en: "Let's meet on Tuesday.",
+          },
+        ],
       },
       {
-        id: "5",
-        vocab: "かばん",
-        furigana: "かばん",
-        mean_vi: "Cặp sách",
-        mean_en: "Bag",
-        example: [
+        id: 5,
+        vocab: "日本",
+        furigana: "にほん",
+        meaning_vi: "Nhật Bản",
+        meaning_en: "Japan",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "かばんの中にノートがあります。",
-            meaning_vi: "Trong cặp có một quyển vở.",
-            meaning_en: "There is a notebook in the bag."
-          }
-        ]
-      }
+            id: 109,
+            kanji: "日",
+            kun_reading: ["ひ", "び"],
+            on_reading: ["ニチ", "ジツ"],
+            han_viet: "NHẬT",
+            meaning_vi: "ngày, mặt trời",
+            meaning_en: "day, sun",
+            radicals: "日",
+            strokes: 4,
+            level: "N5",
+          },
+          {
+            id: 110,
+            kanji: "本",
+            kun_reading: ["もと"],
+            on_reading: ["ホン"],
+            han_viet: "BẢN",
+            meaning_vi: "gốc, sách",
+            meaning_en: "origin, book",
+            radicals: "木",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "私は日本へ行きたいです。",
+            example_furigana: "わたしはにほんへいきたいです。",
+            meaning_vi: "Tôi muốn đến Nhật Bản.",
+            meaning_en: "I want to go to Japan.",
+          },
+        ],
+      },
     ]
   }
 ];
@@ -173,75 +479,228 @@ export const N4_LESSONS: LessonDetail[] = [
     description_en: "Vocabulary about daily activities and routines.",
     vocab: [
       {
-        id: "1",
-        vocab: "起きる",
-        furigana: "おきる",
-        mean_vi: "Thức dậy",
-        mean_en: "Wake up",
-        example: [
+        id: 1,
+        vocab: "学生",
+        furigana: "がくせい",
+        meaning_vi: "học sinh, sinh viên",
+        meaning_en: "student",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "毎朝6時に起きます。",
-            meaning_vi: "Tôi thức dậy lúc 6 giờ mỗi sáng.",
-            meaning_en: "I wake up at 6 a.m. every morning."
-          }
-        ]
+            id: 101,
+            kanji: "学",
+            kun_reading: ["まな.ぶ"],
+            on_reading: ["ガク"],
+            han_viet: "HỌC",
+            meaning_vi: "học",
+            meaning_en: "study",
+            radicals: "子",
+            strokes: 8,
+            level: "N5",
+            examples: [
+              {
+                example_text: "日本語を学ぶ。",
+                example_furigana: "にほんごをまなぶ。",
+                meaning_vi: "Học tiếng Nhật.",
+                meaning_en: "Study Japanese.",
+              },
+            ],
+          },
+          {
+            id: 102,
+            kanji: "生",
+            kun_reading: ["い.きる", "う.まれる"],
+            on_reading: ["セイ", "ショウ"],
+            han_viet: "SINH",
+            meaning_vi: "sống, sinh ra",
+            meaning_en: "life, birth",
+            radicals: "生",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "私は学生です。",
+            example_furigana: "わたしはがくせいです。",
+            meaning_vi: "Tôi là sinh viên.",
+            meaning_en: "I am a student.",
+          },
+        ],
       },
       {
-        id: "2",
-        vocab: "寝る",
-        furigana: "ねる",
-        mean_vi: "Đi ngủ",
-        mean_en: "Go to sleep",
-        example: [
+        id: 2,
+        vocab: "先生",
+        furigana: "せんせい",
+        meaning_vi: "giáo viên",
+        meaning_en: "teacher",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "11時に寝ます。",
-            meaning_vi: "Tôi đi ngủ lúc 11 giờ.",
-            meaning_en: "I go to bed at 11 p.m."
-          }
-        ]
+            id: 103,
+            kanji: "先",
+            kun_reading: ["さき"],
+            on_reading: ["セン"],
+            han_viet: "TIÊN",
+            meaning_vi: "trước",
+            meaning_en: "before, ahead",
+            radicals: "儿",
+            strokes: 6,
+            level: "N5",
+          },
+          {
+            id: 104,
+            kanji: "生",
+            kun_reading: ["い.きる", "う.まれる"],
+            on_reading: ["セイ", "ショウ"],
+            han_viet: "SINH",
+            meaning_vi: "sống, sinh ra",
+            meaning_en: "life, birth",
+            radicals: "生",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "先生は優しいです。",
+            example_furigana: "せんせいはやさしいです。",
+            meaning_vi: "Thầy giáo rất hiền.",
+            meaning_en: "The teacher is kind.",
+          },
+        ],
       },
       {
-        id: "3",
-        vocab: "働く",
-        furigana: "はたらく",
-        mean_vi: "Làm việc",
-        mean_en: "Work",
-        example: [
+        id: 3,
+        vocab: "水",
+        furigana: "みず",
+        meaning_vi: "nước",
+        meaning_en: "water",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "会社で働いています。",
-            meaning_vi: "Tôi đang làm việc tại công ty.",
-            meaning_en: "I work at a company."
-          }
-        ]
+            id: 105,
+            kanji: "水",
+            kun_reading: ["みず"],
+            on_reading: ["スイ"],
+            han_viet: "THỦY",
+            meaning_vi: "nước",
+            meaning_en: "water",
+            radicals: "水",
+            strokes: 4,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "水を飲みます。",
+            example_furigana: "みずをのみます。",
+            meaning_vi: "Tôi uống nước.",
+            meaning_en: "I drink water.",
+          },
+        ],
       },
       {
-        id: "4",
-        vocab: "休む",
-        furigana: "やすむ",
-        mean_vi: "Nghỉ ngơi",
-        mean_en: "Rest",
-        example: [
+        id: 4,
+        vocab: "火曜日",
+        furigana: "かようび",
+        meaning_vi: "Thứ ba",
+        meaning_en: "Tuesday",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "今日は休みます。",
-            meaning_vi: "Hôm nay tôi nghỉ.",
-            meaning_en: "I'm taking a rest today."
-          }
-        ]
+            id: 106,
+            kanji: "火",
+            kun_reading: ["ひ"],
+            on_reading: ["カ"],
+            han_viet: "HỎA",
+            meaning_vi: "lửa",
+            meaning_en: "fire",
+            radicals: "火",
+            strokes: 4,
+            level: "N5",
+          },
+          {
+            id: 107,
+            kanji: "曜",
+            kun_reading: [],
+            on_reading: ["ヨウ"],
+            han_viet: "DIỆU",
+            meaning_vi: "ngày trong tuần",
+            meaning_en: "day of the week",
+            radicals: "日",
+            strokes: 18,
+            level: "N4",
+          },
+          {
+            id: 108,
+            kanji: "日",
+            kun_reading: ["ひ", "び"],
+            on_reading: ["ニチ", "ジツ"],
+            han_viet: "NHẬT",
+            meaning_vi: "ngày, mặt trời",
+            meaning_en: "day, sun",
+            radicals: "日",
+            strokes: 4,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "火曜日に会いましょう。",
+            example_furigana: "かようびにあいましょう。",
+            meaning_vi: "Hẹn gặp vào thứ ba.",
+            meaning_en: "Let's meet on Tuesday.",
+          },
+        ],
       },
       {
-        id: "5",
-        vocab: "勉強する",
-        furigana: "べんきょうする",
-        mean_vi: "Học tập",
-        mean_en: "Study",
-        example: [
+        id: 5,
+        vocab: "日本",
+        furigana: "にほん",
+        meaning_vi: "Nhật Bản",
+        meaning_en: "Japan",
+        level: "N5",
+        word_type: "danh từ",
+        kanjis: [
           {
-            example_text: "毎晩日本語を勉強します。",
-            meaning_vi: "Tôi học tiếng Nhật mỗi tối.",
-            meaning_en: "I study Japanese every night."
-          }
-        ]
-      }
+            id: 109,
+            kanji: "日",
+            kun_reading: ["ひ", "び"],
+            on_reading: ["ニチ", "ジツ"],
+            han_viet: "NHẬT",
+            meaning_vi: "ngày, mặt trời",
+            meaning_en: "day, sun",
+            radicals: "日",
+            strokes: 4,
+            level: "N5",
+          },
+          {
+            id: 110,
+            kanji: "本",
+            kun_reading: ["もと"],
+            on_reading: ["ホン"],
+            han_viet: "BẢN",
+            meaning_vi: "gốc, sách",
+            meaning_en: "origin, book",
+            radicals: "木",
+            strokes: 5,
+            level: "N5",
+          },
+        ],
+        examples: [
+          {
+            example_text: "私は日本へ行きたいです。",
+            example_furigana: "わたしはにほんへいきたいです。",
+            meaning_vi: "Tôi muốn đến Nhật Bản.",
+            meaning_en: "I want to go to Japan.",
+          },
+        ],
+      },
     ]
   }
 ];

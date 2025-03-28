@@ -1,3 +1,4 @@
+import { Vocab } from "./Vocab";
 export interface Lesson {
   id: string;
   title: string;
@@ -35,5 +36,5 @@ export interface LessonDetail {
   level: 'N5' | 'N4';
   description_vi: string;
   description_en: string;
-  vocab: VocabWord[];
+  vocab: Vocab[];
 } 
