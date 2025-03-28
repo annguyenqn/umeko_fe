@@ -8,7 +8,6 @@ interface QuizGameProps {
     vocabItems: Vocab[];
     t: (key: string) => string;
     language: "vi" | "en";
-
 }
 
 const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
@@ -22,28 +21,30 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
     const [correctCount, setCorrectCount] = useState(0);
     const [questionIndex, setQuestionIndex] = useState(1);
 
-
     const generateQuestion = useCallback(() => {
-        if (remainingQuestions.length === 0) return;
+        setRemainingQuestions((prevRemaining) => {
+            if (prevRemaining.length === 0) return prevRemaining;
 
-        const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
-        const selectedQuestion = remainingQuestions[randomIndex];
-        const correctAnswer = selectedQuestion.vocab;
+            const randomIndex = Math.floor(Math.random() * prevRemaining.length);
+            const selectedQuestion = prevRemaining[randomIndex];
+            const correctAnswer = selectedQuestion.vocab;
 
-        const shuffledOptions = vocabItems
-            .filter(item => item.vocab !== correctAnswer)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
+            const shuffledOptions = vocabItems
+                .filter(item => item.vocab !== correctAnswer)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
 
-        shuffledOptions.push(selectedQuestion);
-        shuffledOptions.sort(() => Math.random() - 0.5);
+            shuffledOptions.push(selectedQuestion);
+            shuffledOptions.sort(() => Math.random() - 0.5);
 
-        setCurrentQuestion(selectedQuestion);
-        setOptions(shuffledOptions);
-        setSelectedAnswer(null);
-        setIsCorrect(null);
-        setRemainingQuestions(prev => prev.filter(item => item.id !== selectedQuestion.id));
-    }, [remainingQuestions, vocabItems]);
+            setCurrentQuestion(selectedQuestion);
+            setOptions(shuffledOptions);
+            setSelectedAnswer(null);
+            setIsCorrect(null);
+
+            return prevRemaining.filter(item => item.id !== selectedQuestion.id);
+        });
+    }, [vocabItems]);
 
     useEffect(() => {
         if (vocabItems.length > 0) {
@@ -51,6 +52,7 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
             generateQuestion();
         }
     }, [vocabItems, generateQuestion]);
+
     const handleAnswer = (answer: string) => {
         const correct = answer === currentQuestion?.vocab;
         setSelectedAnswer(answer);
@@ -72,9 +74,6 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
         generateQuestion();
     };
 
-    const getLocalized = (vi: string, en: string) => {
-        return language === "vi" ? vi : en;
-    };
     const restartQuiz = () => {
         setRemainingQuestions([...vocabItems]);
         setCorrectCount(0);
@@ -85,14 +84,19 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
         generateQuestion();
     };
 
+    const getLocalized = (vi: string, en: string) => {
+        return language === "vi" ? vi : en;
+    };
 
     return (
         <Card className="w-[850px] max-w-full p-8 mx-auto mb-4 md:mt-28 bg-white text-slate-900 dark:bg-[#303956] dark:text-white shadow-lg rounded-lg">
             <CardHeader>
                 <CardTitle className="text-2xl">
-                    <Select value={questionType} onValueChange={(value) => setQuestionType(value as "hiragana" | "meaning_vi")}>
-                        <SelectTrigger
-                            className="w-[130px] text-lg py-3 mb-5 bg-white text-slate-900 dark:bg-[#303956] dark:text-white border border-slate-400 dark:border-slate-600">
+                    <Select
+                        value={["hiragana", "meaning_vi"].includes(questionType) ? questionType : "hiragana"}
+                        onValueChange={(value) => setQuestionType(value as "hiragana" | "meaning_vi")}
+                    >
+                        <SelectTrigger className="w-[130px] text-lg py-3 mb-5 bg-white text-slate-900 dark:bg-[#303956] dark:text-white border border-slate-400 dark:border-slate-600">
                             <SelectValue placeholder="Chọn loại câu hỏi" />
                         </SelectTrigger>
                         <SelectContent className="bg-white text-slate-900 dark:bg-[#303956] dark:text-white">
@@ -108,11 +112,13 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
             <CardContent>
                 {remainingQuestions.length === 0 ? (
                     <div className="text-center">
-                        <h2 className="text-3xl font-bold"> {t("quiz.resultTitle") || "Result Title"}</h2>
+                        <h2 className="text-3xl font-bold">{t("quiz.resultTitle") || "Result"}</h2>
                         <p className="mt-4 text-green-500 text-lg">
-                            {t("quiz.correctCount") || "Correct Count"}
-                            {correctCount}</p>
-                        <p className="mt-4 text-red-500 text-lg">{t("quiz.wrongCount") || "Wrong Count"}{wrongCount}</p>
+                            {t("quiz.correctCount") || "Correct"}: {correctCount}
+                        </p>
+                        <p className="mt-4 text-red-500 text-lg">
+                            {t("quiz.wrongCount") || "Wrong"}: {wrongCount}
+                        </p>
                         <Button
                             onClick={restartQuiz}
                             className="mt-6 w-full py-6 text-lg text-white bg-blue-500 hover:bg-blue-700"
@@ -139,8 +145,7 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                                                 ? isCorrect
                                                     ? "bg-green-600 text-white"
                                                     : "bg-red-600 text-white"
-                                                : "bg-transparent hover:bg-[#e7bfc7] text-slate-900 dark:text-white dark:hover:bg-[#3f486b]"
-                                            }
+                                                : "bg-transparent hover:bg-[#e7bfc7] text-slate-900 dark:text-white dark:hover:bg-[#3f486b]"}
                                             ${selectedAnswer && !isCorrect && option.vocab === currentQuestion?.vocab
                                                 ? "border-4 border-dashed border-green-400 bg-white text-slate-800 dark:bg-[#4a5470] dark:text-white dark:border-green-400"
                                                 : ""}`}
@@ -151,7 +156,10 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                                 ))}
                             </div>
                             {selectedAnswer && !isCorrect && (
-                                <Button onClick={nextQuestion} className="w-full py-6 mt-6 text-lg text-white bg-blue-500 hover:bg-blue-700">
+                                <Button
+                                    onClick={nextQuestion}
+                                    className="w-full py-6 mt-6 text-lg text-white bg-blue-500 hover:bg-blue-700"
+                                >
                                     {t("quiz.next") || "Next"}
                                 </Button>
                             )}
