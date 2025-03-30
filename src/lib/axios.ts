@@ -1,7 +1,12 @@
 import axios from 'axios'
+
 const baseURL = process.env.NEXT_PUBLIC_NEST_API_URL
+const vocabBaseURL = process.env.NEXT_PUBLIC_NEST_API_VOCAB_URL
 
 console.log('[AXIOS] Base URL:', baseURL)
+console.log('[AXIOS] Vocab Base URL:', vocabBaseURL)
+
+// API có token
 const api = axios.create({
   baseURL,
   headers: {
@@ -11,7 +16,6 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // Lấy token từ localStorage
     const token = localStorage.getItem('accessToken')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
@@ -23,10 +27,15 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    // Xử lý lỗi chung
-    return Promise.reject(error)
-  }
+  (error) => Promise.reject(error)
 )
 
-export default api
+// API không cần token
+const vocabApi = axios.create({
+  baseURL: vocabBaseURL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+export { api, vocabApi }

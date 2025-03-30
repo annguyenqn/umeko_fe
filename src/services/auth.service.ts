@@ -1,4 +1,4 @@
-import api from '@/lib/axios'
+import {api} from '@/lib/axios'
 
 export async function loginService(payload: { email: string; password: string }) {
     

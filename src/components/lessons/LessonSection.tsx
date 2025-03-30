@@ -1,18 +1,21 @@
-'use client'
+'use client';
 
-import { useLanguage } from "@/contexts/LanguageContext"
-import { Card } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import Link from 'next/link'
-import { LessonSectionProps } from '@/types/lesson'
-
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import Link from 'next/link';
+import { Lesson } from "@/types/Category";
+interface LessonSectionProps {
+    level: string;
+    lessons: Lesson[];
+}
 export function LessonSection({ level, lessons }: LessonSectionProps) {
-    const { t, language } = useLanguage()
+    const { t, language } = useLanguage();
 
     // Helper function to get content based on language
     const getLocalizedContent = (vi: string, en: string) => {
-        return language === 'vi' ? vi : en
-    }
+        return language === 'vi' ? vi : en;
+    };
 
     return (
         <div className="min-h-screen p-8">
@@ -30,7 +33,7 @@ export function LessonSection({ level, lessons }: LessonSectionProps) {
                     {lessons.map((lesson) => (
                         <Link
                             key={lesson.id}
-                            href={`/vocabulary/${level.toLowerCase()}/${lesson.id}`}
+                            href={`/vocabulary/${level.toLowerCase()}/${lesson.id}?lesson_number=${lesson.lesson_number}`}
                             className="transition-transform hover:-translate-y-1"
                         >
                             <Card className="p-6 h-full hover:shadow-lg transition-shadow">
@@ -38,21 +41,21 @@ export function LessonSection({ level, lessons }: LessonSectionProps) {
                                     <div className="flex items-start justify-between mb-4">
                                         <div>
                                             <h3 className="font-semibold text-lg mb-1">
-                                                {`${lesson.book} - ${t('vocab.lesson')} ${lesson.lesson_number}`}
+                                                {`${t('vocab.lesson')} ${lesson.lesson_number}`}
                                             </h3>
                                             <p className="text-sm text-muted-foreground mb-2">
                                                 {getLocalizedContent(lesson.description_vi, lesson.description_en)}
                                             </p>
                                         </div>
-                                        <span className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">
-                                            {lesson.level}
-                                        </span>
+                                        {/* <span className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">
+                                            {lesson.category.name}
+                                        </span> */}
                                     </div>
 
                                     <div className="mt-auto">
                                         <div className="flex items-center justify-between text-sm mb-2">
                                             <span>
-                                                {`${t('vocab.vocab_total')} ${lesson.vocab.length}`}
+                                                {t('vocab.vocab_total')} {/* Nếu có vocab data */}
                                             </span>
                                             <span className="text-primary">
                                                 50%
@@ -67,5 +70,5 @@ export function LessonSection({ level, lessons }: LessonSectionProps) {
                 </div>
             </div>
         </div>
-    )
-} 
+    );
+}
