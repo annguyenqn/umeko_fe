@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import Pagination from "./Pagination";
 import FlipCard from "./FlipCard";
-import { Vocab } from "@/types/Vocab";
+import { Vocabulary } from "@/types/Vocab";
 
 interface FlashCardProps {
-    kanjiItems: Vocab[];
+    kanjiItems: Vocabulary[];
     t: (key: string) => string;
     language: "vi" | "en";
 }
@@ -103,7 +103,7 @@ const FlashCard: React.FC<FlashCardProps> = ({ kanjiItems, t, language }) => {
                         backContent={
                             <div className="text-foreground text-lg md:text-2xl">
                                 <p><strong>Furigana: </strong>{selectedOption === "kanji" ? currentKanji.furigana : currentKanji.vocab}</p>
-                                <p><strong> {t("flashCard.mean") || "Mean"}: </strong>{getLocalized(currentKanji.meaning_vi ?? '', currentKanji.meaning_en ?? '')}</p>
+                                <p><strong> {t("flashCard.mean") || "Mean"}: </strong>{getLocalized(currentKanji.mean_vi ?? '', currentKanji.mean_en ?? '')}</p>
                                 {kanjiInfoList.length > 0 && (
                                     <div className={`mt-4 border-t pt-2 grid ${kanjiInfoList.length >= 3 ? 'grid-cols-2 gap-2' : 'grid-cols-1'}`}>
                                         {kanjiInfoList.map((kanji, index) => (

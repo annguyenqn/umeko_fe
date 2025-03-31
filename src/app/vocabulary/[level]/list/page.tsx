@@ -9,7 +9,7 @@ import { Lesson } from '@/types/Category';
 export default function LevelPage() {
     const { level } = useParams();
     const searchParams = useSearchParams();
-    const categoryId = searchParams.get('categoryId'); // Lấy categoryId từ URL query
+    const categoryId = searchParams.get('categoryId');
 
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [loading, setLoading] = useState(true);
@@ -37,7 +37,8 @@ export default function LevelPage() {
     if (loading) return <div>Loading...</div>;
     if (!lessons.length) return <div>No lessons found</div>;
     if (!level) {
-        return <div>Level not found</div>; // Handle the case where level is undefined
+        return <div>Level not found</div>;
     }
-    return <LessonSection level={level} lessons={lessons} />;
+    const levelString = Array.isArray(level) ? level[0] : level;
+    return <LessonSection level={levelString} lessons={lessons} />;
 }

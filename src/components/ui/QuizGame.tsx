@@ -2,19 +2,19 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Vocab } from "@/types/Vocab";
+import { Vocabulary } from "@/types/Vocab";
 
 interface QuizGameProps {
-    vocabItems: Vocab[];
+    vocabItems: Vocabulary[];
     t: (key: string) => string;
     language: "vi" | "en";
 }
 
 const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
     const [questionType, setQuestionType] = useState<"hiragana" | "meaning_vi">("hiragana");
-    const [remainingQuestions, setRemainingQuestions] = useState<Vocab[]>([...vocabItems]);
-    const [currentQuestion, setCurrentQuestion] = useState<Vocab | null>(null);
-    const [options, setOptions] = useState<Vocab[]>([]);
+    const [remainingQuestions, setRemainingQuestions] = useState<Vocabulary[]>([...vocabItems]);
+    const [currentQuestion, setCurrentQuestion] = useState<Vocabulary | null>(null);
+    const [options, setOptions] = useState<Vocabulary[]>([]);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [wrongCount, setWrongCount] = useState(0);
@@ -131,7 +131,7 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                         <>
                             <p className="text-3xl font-semibold text-center mb-8">
                                 {questionType === "hiragana" && currentQuestion.furigana}
-                                {questionType === "meaning_vi" && getLocalized(currentQuestion.meaning_vi ?? '', currentQuestion.meaning_en ?? '')}
+                                {questionType === "meaning_vi" && getLocalized(currentQuestion.mean_vi ?? '', currentQuestion.mean_en ?? '')}
                             </p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {options.map(option => (

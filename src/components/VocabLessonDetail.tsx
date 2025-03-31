@@ -33,7 +33,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language }) 
                                     </div>
                                 </div>
 
-                                {word.examples?.map((ex, index) => (
+                                {word.examples?.slice(0, 2).map((ex, index) => (
                                     <div key={index} className="bg-muted/50 rounded-lg p-4">
                                         <p className="text-lg mb-2">{ex.example_text}</p>
                                         <p className="text-sm text-muted-foreground">
@@ -41,6 +41,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language }) 
                                         </p>
                                     </div>
                                 ))}
+
                             </div>
                         </Card>
                     ))}

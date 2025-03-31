@@ -27,6 +27,7 @@ export default function LessonPage() {
                     const data = await getLessonVocabulary(lessonNumber);
                     setVocabList(data);
                 } catch (err) {
+                    console.log(err);
                     setError("Không thể tải dữ liệu từ vựng.");
                 } finally {
                     setLoading(false);
