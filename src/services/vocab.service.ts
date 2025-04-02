@@ -20,11 +20,22 @@ import { Vocabulary } from '@/types/Vocab'
         throw error;
     }
 }
-export async function getLessonVocabulary(lessonId: string): Promise<Vocabulary[]> {
+export async function getLessonVocabulary(
+  lessonId: string,
+  categoryId?: string // Tham số tùy chọn
+): Promise<Vocabulary[]> {
   try {
-    console.log("Calling API:", `/vocabularies/lesson/${lessonId}`);
+    // Tạo URL cơ bản
+    const url = `/vocabularies/lesson/${lessonId}`;
     
-    const response = await vocabApi.get<Vocabulary[]>(`/vocabularies/lesson/${lessonId}`);
+    // Tạo object params để truyền query parameter
+    const params = categoryId ? { categoryId } : undefined;
+    
+    console.log("Calling API:", url, "with params:", params);
+    
+    // Gọi API với params
+    const response = await vocabApi.get<Vocabulary[]>(url, { params });
+    
     console.log("API Response:", response.data);
     
     return response.data;

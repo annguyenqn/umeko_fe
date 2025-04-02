@@ -13,6 +13,7 @@ import { Vocabulary } from "@/types/Vocab";
 export default function LessonPage() {
     const searchParams = useSearchParams();
     const lessonNumber = searchParams.get("lesson_number");
+    const categoryId = searchParams.get("categoryId");
     const { t, language } = useLanguage();
 
     const [vocabList, setVocabList] = useState<Vocabulary[]>([]);
@@ -24,7 +25,7 @@ export default function LessonPage() {
             if (lessonNumber) {
                 try {
                     setLoading(true);
-                    const data = await getLessonVocabulary(lessonNumber);
+                    const data = await getLessonVocabulary(lessonNumber, categoryId || undefined);
                     setVocabList(data);
                 } catch (err) {
                     console.log(err);
@@ -36,7 +37,7 @@ export default function LessonPage() {
         }
 
         fetchVocab();
-    }, [lessonNumber]);  // Reload khi lessonNumber thay đổi
+    }, [lessonNumber, categoryId]);
 
     if (loading) return <div>{t("loading")}</div>;
     if (error) return <div>{error}</div>;

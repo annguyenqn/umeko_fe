@@ -11,6 +11,7 @@ interface LessonSectionProps {
 }
 export function LessonSection({ level, lessons }: LessonSectionProps) {
     const { t, language } = useLanguage();
+    console.log('this is lesson', lessons);
 
     // Helper function to get content based on language
     const getLocalizedContent = (vi: string, en: string) => {
@@ -24,8 +25,8 @@ export function LessonSection({ level, lessons }: LessonSectionProps) {
                     <h1 className="text-3xl font-bold">
                         {t(`vocab.${level.toLowerCase()}.title`)}
                     </h1>
-                    <span className="text-sm text-muted-foreground">
-                        {`${lessons.length} ${t('vocab.totalLessons')}`}
+                    <span className="text-sm  text-white">
+                        {`${t('vocab.TotalLesson')}${lessons.length}`}
                     </span>
                 </div>
 
@@ -33,7 +34,7 @@ export function LessonSection({ level, lessons }: LessonSectionProps) {
                     {lessons.map((lesson) => (
                         <Link
                             key={lesson.id}
-                            href={`/vocabulary/${level.toLowerCase()}/${lesson.id}?lesson_number=${lesson.lesson_number}`}
+                            href={`/vocabulary/${level.toLowerCase()}/${lesson.id}?lesson_number=${lesson.lesson_number}&categoryId=${lesson.category.id}`}
                             className="transition-transform hover:-translate-y-1"
                         >
                             <Card className="p-6 h-full hover:shadow-lg transition-shadow">

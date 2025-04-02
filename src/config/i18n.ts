@@ -154,7 +154,8 @@ export const translations = {
       lesson: 'Lesson',
       listVocab: 'List vocabs',
       flashcard: 'Flash card',
-      TestVocab: 'Test vocab'
+      TestVocab: 'Test vocab',
+      TotalLesson: 'Total lesson: '
     },
     flashCard:{
       mean: 'Mean',
@@ -306,6 +307,9 @@ export const translations = {
       n4: {
         title: 'Từ vựng N4',
       },
+      n3: {
+        title: 'Từ vựng N3 Mimikara',
+      },
       totalLessons_1: '1 bài học',
       totalLessons_2: '2 bài học',
       vocab_total: 'Tổng từ vựng',
@@ -315,7 +319,8 @@ export const translations = {
       lesson: 'Bài',
       listVocab: 'Danh sách từ vựng',
       flashcard: 'Thẻ ghi nhớ',
-      TestVocab: 'Kiểm tra từ vựng'
+      TestVocab: 'Kiểm tra từ vựng',
+      TotalLesson: 'Tổng bài học: '
     },
     flashCard:{
       mean: 'Nghĩa',
