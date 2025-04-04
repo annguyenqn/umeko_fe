@@ -5,6 +5,7 @@ import { useParams, useSearchParams, notFound } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getLessonsByCategory } from '@/services/vocab.service';
 import { Lesson } from '@/types/Category';
+import Loading from '@/components/ui/loading';
 
 export default function LevelPage() {
     const { level } = useParams();
@@ -34,7 +35,7 @@ export default function LevelPage() {
         fetchLessons();
     }, [level, categoryId]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div><Loading /></div>;
     if (!lessons.length) return <div>No lessons found</div>;
     if (!level) {
         return <div>Level not found</div>;

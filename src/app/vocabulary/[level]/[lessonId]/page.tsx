@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import QuizGame from "@/components/ui/QuizGame";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Vocabulary } from "@/types/Vocab";
+import Loading from "@/components/ui/loading";
 
 export default function LessonPage() {
     const searchParams = useSearchParams();
@@ -39,7 +40,7 @@ export default function LessonPage() {
         fetchVocab();
     }, [lessonNumber, categoryId]);
 
-    if (loading) return <div>{t("loading")}</div>;
+    if (loading) return <div><Loading /></div>;
     if (error) return <div>{error}</div>;
     if (vocabList.length === 0) return <div>{t("notFound")}</div>;
 
