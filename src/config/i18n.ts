@@ -155,7 +155,8 @@ export const translations = {
       listVocab: 'List vocabs',
       flashcard: 'Flash card',
       TestVocab: 'Test vocab',
-      TotalLesson: 'Total lesson: '
+      TotalLesson: 'Total lesson: ',
+      viewImage:'View Image'
     },
     flashCard:{
       mean: 'Mean',
@@ -320,7 +321,8 @@ export const translations = {
       listVocab: 'Danh sách từ vựng',
       flashcard: 'Thẻ ghi nhớ',
       TestVocab: 'Kiểm tra từ vựng',
-      TotalLesson: 'Tổng bài học: '
+      TotalLesson: 'Tổng bài học: ',
+      viewImage:'Xem ảnh',
     },
     flashCard:{
       mean: 'Nghĩa',

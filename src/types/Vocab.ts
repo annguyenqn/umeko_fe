@@ -25,6 +25,8 @@ export interface Vocabulary {
   furigana: string;
   mean_vi: string;
   mean_en: string;
+  image_link:string;
+  sound_link:string;
   kanjis: Kanji[];
   examples: Example[];
 }
