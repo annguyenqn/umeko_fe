@@ -28,5 +28,6 @@ export interface Vocabulary {
   image_link:string;
   sound_link:string;
   kanjis: Kanji[];
+  word_type:string;
   examples: Example[];
 }

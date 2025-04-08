@@ -81,7 +81,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language }) 
                                         </p>
                                         <p className="text-sm text-muted-foreground italic">{word.furigana}</p>
                                         <p className="text-sm text-muted-foreground">
-                                            <span className="font-medium">[Loại từ]:</span> {`Danh từ`}
+                                            <span className="font-medium">[Loại từ]:</span> {word.word_type}
                                         </p>
                                     </div>
                                 </div>
