@@ -10,8 +10,12 @@ import QuizGame from "@/components/ui/QuizGame";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Vocabulary } from "@/types/Vocab";
 import { Lesson } from "@/types/Category";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import Loading from "@/components/ui/loading";
 import Link from "next/link";
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/ScrollArea";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 export default function LessonPage() {
     const searchParams = useSearchParams();
@@ -52,43 +56,43 @@ export default function LessonPage() {
 
     return (
         <div className="relative min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
-            {/* Mini Lesson Menu */}
-            <div className=" hidden md:block fixed top-20 right-4 z-20 bg-background shadow-lg rounded-xl p-4 w-60 max-h-[80vh] overflow-y-auto">
-                <h3 className="text-sm font-semibold mb-4 text-center">
-                    {t("vocab.TotalLesson")}
-                </h3>
-                <div className="grid grid-cols-3 gap-3">
-                    {lessons.map((lesson) => {
-                        const isActive = lesson.lesson_number.toString() === lessonNumber;
 
-                        return (
-                            <Link
-                                key={lesson.id}
-                                href={`/vocabulary/${lesson.level.toLowerCase()}/${lesson.id}?lesson_number=${lesson.lesson_number}&categoryId=${lesson.category.id}`}
-                                className={`relative group text-center text-[13px] font-medium px-2.5 py-2 rounded-xl border border-slate-500 transition-all overflow-hidden ${isActive
-                                    ? 'bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-[0px_4px_32px_0_rgba(99,102,241,.70)]'
-                                    : 'hover:bg-muted'
-                                    }`}
-                            >
-                                {isActive ? (
-                                    <div className="relative overflow-hidden h-5">
-                                        <p className="group-hover:-translate-y-6 transition-all duration-[1.125s] ease-[cubic-bezier(0.19,1,0.22,1)]">
+            <div className="z-30 mb-4 flex justify-end md:absolute md:top-8 md:right-8">
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="outline" className="rounded-full shadow-md">
+                            {t("vocab.TotalLesson")}
+                        </Button>
+                    </SheetTrigger>
+
+                    <SheetContent side="right" className="w-[260px] sm:w-[300px] pt-6">
+                        <SheetTitle>
+                            <VisuallyHidden>{t("vocab.TotalLesson")}</VisuallyHidden>
+                        </SheetTitle>
+
+                        <ScrollArea className="h-[75vh] pr-2 pt-2">
+                            <div className="grid grid-cols-3 gap-3">
+                                {lessons.map((lesson) => {
+                                    const isActive = lesson.lesson_number.toString() === lessonNumber;
+
+                                    return (
+                                        <Link
+                                            key={lesson.id}
+                                            href={`/vocabulary/${lesson.level.toLowerCase()}/${lesson.id}?lesson_number=${lesson.lesson_number}&categoryId=${lesson.category.id}`}
+                                            className={`relative group text-center text-[13px] font-medium px-2.5 py-2 rounded-xl border border-slate-500 transition-all overflow-hidden ${isActive
+                                                ? 'bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-[0px_4px_32px_0_rgba(99,102,241,.70)]'
+                                                : 'hover:bg-muted'
+                                                }`}
+                                        >
                                             {lesson.lesson_number}
-                                        </p>
-                                        <p className="absolute top-6 left-0 w-full group-hover:top-0 transition-all duration-[1.125s] ease-[cubic-bezier(0.19,1,0.22,1)]">
-                                            {lesson.lesson_number}
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <span>{lesson.lesson_number}</span>
-                                )}
-                            </Link>
-                        );
-                    })}
-                </div>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </ScrollArea>
+                    </SheetContent>
+                </Sheet>
             </div>
-
-
 
             {/* Main Tabs */}
             <Tabs defaultValue="vocab" className="w-full">
