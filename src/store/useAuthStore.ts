@@ -2,7 +2,7 @@
 import { create } from 'zustand'
 import { loginService, logoutService, getMeService } from '@/services/auth.service'
 import { User } from '@/types/User'
-
+import Cookies from 'js-cookie';
 interface AuthState {
   user: User | null
   loading: boolean
@@ -37,7 +37,14 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: async (email, password, router) => {
     try {
+      console.log('login',email, password);
+      
       const result = await loginService({ email, password })
+
+          // Lưu vào cookie (để Server Component có thể dùng)
+    Cookies.set('accessToken', result.accessToken, { expires: 7 });
+    Cookies.set('refreshToken', result.refreshToken, { expires: 7 });
+
       localStorage.setItem('accessToken', result.accessToken)
       localStorage.setItem('refreshToken', result.refreshToken)
       await useAuthStore.getState().fetchUser()
