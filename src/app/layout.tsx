@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         alt: "Umeko - Learn Japanese Vocabulary and Kanji",
       },
     ],
-    locale: "en_US", // Adjust based on your target audience
+    locale: "en_US",
     type: "website",
   },
   twitter: {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: "Study JLPT N5-N1 with Umeko’s flashcards and spaced repetition system.",
   },
   alternates: {
-    canonical: "https://your-umeko-domain.com", // Replace with your actual domain
+    canonical: "https://your-umeko-domain.com",
   },
   robots: {
     index: true,

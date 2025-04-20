@@ -12,7 +12,7 @@ interface UserState {
   clearUserDetails: () => void;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserDashboardStore = create<UserState>((set) => ({
   data: null,
   loading: false,
   error: null,
