@@ -20,6 +20,7 @@ export interface Kanji {
 }
 
 export interface Vocabulary {
+  learningStatus: string;
   id: string;
   vocab: string;
   furigana: string;

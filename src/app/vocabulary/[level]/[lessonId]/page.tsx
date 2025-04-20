@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getLessonVocabulary, getLessonsByCategory } from "@/services/vocab.service";
 import { VocabLessonContent } from "@/components/VocabLessonDetail";
@@ -16,7 +16,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/ScrollArea";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-
+import { useUserDashboardStore } from "@/store/userDashboardStore";
 export default function LessonPage() {
     const searchParams = useSearchParams();
     const lessonNumber = searchParams.get("lesson_number");
@@ -27,6 +27,13 @@ export default function LessonPage() {
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const fetchUserDetails = useUserDashboardStore((s) => s.fetchUserDetails);
+    const dashboardData = useUserDashboardStore((s) => s.data);
+
+    useEffect(() => {
+        fetchUserDetails();
+    }, [fetchUserDetails]);
 
     useEffect(() => {
         async function fetchData() {
@@ -49,6 +56,24 @@ export default function LessonPage() {
 
         fetchData();
     }, [lessonNumber, categoryId]);
+    // console.log('learnedVocab data ', dashboardData);
+    console.log('dashedboard data ', dashboardData);
+
+
+    const learnedVocabMap = useMemo(() => {
+        const map = new Map<string, string>();
+
+        if (dashboardData?.vocab?.vocabList?.length) {
+            dashboardData.vocab.vocabList.forEach((vocab) => {
+                if (vocab.learningStatus) {
+                    map.set(vocab.id, vocab.learningStatus);
+                }
+            });
+        }
+
+        return map;
+    }, [dashboardData]);
+
 
     if (loading) return <div><Loading /></div>;
     if (error) return <div>{error}</div>;
@@ -56,7 +81,6 @@ export default function LessonPage() {
 
     return (
         <div className="relative min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
-
             <div className="z-30 mb-4 flex justify-end md:absolute md:top-8 md:right-8">
                 <Sheet>
                     <SheetTrigger asChild>
@@ -94,7 +118,6 @@ export default function LessonPage() {
                 </Sheet>
             </div>
 
-            {/* Main Tabs */}
             <Tabs defaultValue="vocab" className="w-full">
                 <TabsList className="mb-6">
                     <TabsTrigger value="vocab">{t("vocab.listVocab")}</TabsTrigger>
@@ -103,7 +126,7 @@ export default function LessonPage() {
                 </TabsList>
 
                 <TabsContent value="vocab">
-                    <VocabLessonContent vocabList={vocabList} t={t} language={language} />
+                    <VocabLessonContent vocabList={vocabList} t={t} language={language} learnedVocabMap={learnedVocabMap} />
                 </TabsContent>
 
                 <TabsContent value="flashcard">
