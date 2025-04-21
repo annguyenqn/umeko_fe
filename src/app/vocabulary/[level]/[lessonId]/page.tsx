@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/ScrollArea";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import { useUserDashboardStore } from "@/store/userDashboardStore";
+import { useAuthStore } from "@/store/useAuthStore";
 export default function LessonPage() {
     const searchParams = useSearchParams();
     const lessonNumber = searchParams.get("lesson_number");
@@ -27,13 +28,15 @@ export default function LessonPage() {
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
+    const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
     const fetchUserDetails = useUserDashboardStore((s) => s.fetchUserDetails);
     const dashboardData = useUserDashboardStore((s) => s.data);
 
     useEffect(() => {
-        fetchUserDetails();
-    }, [fetchUserDetails]);
+        if (isAuthenticated) {
+            fetchUserDetails();
+        }
+    }, [isAuthenticated, fetchUserDetails]);
 
     useEffect(() => {
         async function fetchData() {
@@ -56,8 +59,6 @@ export default function LessonPage() {
 
         fetchData();
     }, [lessonNumber, categoryId]);
-    // console.log('learnedVocab data ', dashboardData);
-    console.log('dashedboard data ', dashboardData);
 
 
     const learnedVocabMap = useMemo(() => {

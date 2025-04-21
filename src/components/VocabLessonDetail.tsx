@@ -10,7 +10,7 @@ import Image from "next/image";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { LearningStatus } from "@/types/User";
 import { useInitReviewBatch } from "@/hooks/useInitReviewBatch";
-
+import { useAuthStore } from "@/store/useAuthStore";
 const learningStatusViMap: Record<LearningStatus, string> = {
     new: 'Người mới',
     learning: 'Đang học',
@@ -31,7 +31,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
     const [addedVocabIds, setAddedVocabIds] = useState<Set<string>>(new Set());
     const { addToReviewQueue } = useInitReviewBatch();
     console.log('learned vocab ', learnedVocabMap);
-
+    const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
     const getLocalizedContent = (vi: string, en: string) => language === "vi" ? vi : en;
 
     const handleAddVocab = (vocabId: string) => {
@@ -123,21 +123,24 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
                                         <span className={`text-xs px-3 py-1 rounded-full w-fit ${getStatusColor(status)}`}>
                                             {learningStatusViMap[status]}
                                         </span>
-                                    ) : isAdded ? (
-                                        <div className="flex items-center gap-2 text-green-600 text-sm font-semibold animate-fade-in transition-all">
-                                            <CheckCircle2 className="w-4 h-4" />
-                                            Đã thêm
-                                        </div>
-                                    ) : (
-                                        <Button
-                                            onClick={() => handleAddVocab(word.id)}
-                                            className="w-[150px] bg-black h-[50px] my-3 flex items-center justify-center gap-2 rounded-xl cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-400 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0 text-white text-sm font-medium"
-                                        >
-                                            <Book className="w-4 h-4" />
-                                            Học từ này
-                                            <Plus className="w-4 h-4" />
-                                        </Button>
-                                    )}
+                                    ) : isAuthenticated ? (
+                                        isAdded ? (
+                                            <div className="flex items-center gap-2 text-green-600 text-sm font-semibold animate-fade-in transition-all">
+                                                <CheckCircle2 className="w-4 h-4" />
+                                                Đã thêm
+                                            </div>
+                                        ) : (
+                                            <Button
+                                                onClick={() => handleAddVocab(word.id)}
+                                                className="w-[150px] bg-black h-[50px] my-3 flex items-center justify-center gap-2 rounded-xl cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-400 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0 text-white text-sm font-medium"
+                                            >
+                                                <Book className="w-4 h-4" />
+                                                Học từ này
+                                                <Plus className="w-4 h-4" />
+                                            </Button>
+                                        )
+                                    ) : null}
+
 
                                     {/* Image Dialog */}
                                     <Dialog>

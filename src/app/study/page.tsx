@@ -1,106 +1,61 @@
-"use client";
-import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/Dialog";
-import FlipCard from "@/components/ui/FlipCard";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, AlertCircle, XCircle } from "lucide-react";
+'use client';
+import { useEffect, useState, useRef } from 'react';
+import { getDueReviews, submitManyReviews } from '@/services/review.service';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/Dialog';
+import FlipCard from '@/components/ui/FlipCard';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { ReviewResult } from '@/types/Review';
 
-interface KanjiItem {
+interface ReviewItem {
+    vocabId: string;
     vocab: string;
     furigana: string;
     mean_vi: string;
     mean_en: string;
-    kanjis: Array<{
-        kanji: string;
-        han_viet: string;
-        meaning_vi: string;
-        meaning_en: string;
-    }>;
 }
 
 const FlashCardPage: React.FC = () => {
-    // Dữ liệu giả cho kanjiItems
-    const fakeKanjiItems: KanjiItem[] = [
-        {
-            vocab: "こんにちは",
-            furigana: "konnichiwa",
-            mean_vi: "Xin chào",
-            mean_en: "Hello",
-            kanjis: [], // Không có kanji
-        },
-        {
-            vocab: "食べる",
-            furigana: "たべる",
-            mean_vi: "Ăn",
-            mean_en: "Eat",
-            kanjis: [
-                {
-                    kanji: "食",
-                    han_viet: "THỰC",
-                    meaning_vi: "Ăn",
-                    meaning_en: "Eat",
-                },
-            ],
-        },
-        {
-            vocab: "学生",
-            furigana: "がくせい",
-            mean_vi: "Học sinh",
-            mean_en: "Student",
-            kanjis: [
-                {
-                    kanji: "学",
-                    han_viet: "HỌC",
-                    meaning_vi: "Học",
-                    meaning_en: "Study",
-                },
-                {
-                    kanji: "生",
-                    han_viet: "SINH",
-                    meaning_vi: "Sinh, sống",
-                    meaning_en: "Life, birth",
-                },
-            ],
-        },
-    ];
-
-    const kanjiItems = fakeKanjiItems;
-
+    const [reviewItems, setReviewItems] = useState<ReviewItem[]>([]);
     const [currentItem, setCurrentItem] = useState(0);
-    const [shuffledKanjiItems, setShuffledKanjiItems] = useState(kanjiItems);
-    const [selectedOption, setSelectedOption] = useState<"kanji" | "Furigana">("kanji");
+    const [reviewQueue, setReviewQueue] = useState<{ vocabId: string; result: ReviewResult }[]>([]);
     const [slide, setSlide] = useState(false);
-    const [axis, setAxis] = useState<"x" | "y">("x");
     const [flipped, setFlipped] = useState(false);
-    const [reviewStatus, setReviewStatus] = useState<("pass" | "partial" | "fail")[]>([]);
+    const [axis, setAxis] = useState<'x' | 'y'>('x');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [hasFinished, setHasFinished] = useState(false);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Giả lập hàm t (dịch)
-    const t = (key: string) => {
-        const translations: { [key: string]: string } = {
-            "flashCard.mix": "Mix",
-            "flashCard.mean": "Mean",
-        };
-        return translations[key] || key;
-    };
+    const t = (key: string) => ({ 'flashCard.mix': 'Mix', 'flashCard.mean': 'Mean' }[key] || key);
+    const language: 'vi' | 'en' = 'vi';
+    const getLocalized = (vi: string, en: string) => (language === 'vi' ? vi : en);
 
-    // Hardcode language
-    const language: "vi" | "en" = "vi"; // Có thể thay đổi thành "en"
-
-    const getLocalized = (vi: string, en: string) => {
-        return language === "vi" ? vi : en;
+    const fetchReviews = async () => {
+        try {
+            const { dueVocab } = await getDueReviews();
+            const mapped = dueVocab.map((vocab) => ({
+                vocabId: vocab.id,
+                vocab: vocab.vocab,
+                furigana: vocab.furigana,
+                mean_vi: vocab.mean_vi,
+                mean_en: vocab.mean_en,
+            }));
+            setReviewItems(mapped);
+            setCurrentItem(0);
+            setFlipped(false);
+        } catch (err) {
+            console.error('[FlashCardPage] Fetch review error:', err);
+        }
     };
 
     useEffect(() => {
-        const updateAxis = () => {
-            setAxis(window.innerWidth >= 768 ? "x" : "y");
-        };
+        fetchReviews();
 
-        updateAxis(); // gọi lần đầu
-        window.addEventListener("resize", updateAxis);
-
-        return () => window.removeEventListener("resize", updateAxis);
+        const resizeHandler = () => setAxis(window.innerWidth >= 768 ? 'x' : 'y');
+        resizeHandler();
+        window.addEventListener('resize', resizeHandler);
+        return () => window.removeEventListener('resize', resizeHandler);
     }, []);
 
     const handlePaginationChange = (index: number) => {
@@ -111,112 +66,90 @@ const FlashCardPage: React.FC = () => {
             setSlide(false);
         }, 300);
     };
-    const handleReview = (status: "pass" | "partial" | "fail") => {
-        const updatedReviewStatus = [...reviewStatus];
-        updatedReviewStatus[currentItem] = status;
-        setReviewStatus(updatedReviewStatus);
 
-        if (currentItem < shuffledKanjiItems.length - 1) {
+    const handleReview = (result: ReviewResult) => {
+        const current = reviewItems[currentItem];
+        if (!current) return;
+
+        setReviewQueue((prev) => [...prev, { vocabId: current.vocabId, result }]);
+
+        if (currentItem < reviewItems.length - 1) {
             handlePaginationChange(currentItem + 1);
         } else {
-            setIsDialogOpen(true); // Mở Dialog khi hoàn thành
+            setIsDialogOpen(true);
         }
     };
+
     const handleShuffle = () => {
-        const shuffled = [...shuffledKanjiItems]
-            .map((item) => ({ ...item, random: Math.random() }))
-            .sort((a, b) => a.random - b.random)
-            .map(({ random, ...item }) => item);
-        setShuffledKanjiItems(shuffled);
+        const shuffled = [...reviewItems]
+            .map((item) => ({ ...item, rand: Math.random() }))
+            .sort((a, b) => a.rand - b.rand)
+            .map(({ rand, ...rest }) => rest);
+        setReviewItems(shuffled);
         setCurrentItem(0);
         setFlipped(false);
     };
 
-    const currentKanji = shuffledKanjiItems[currentItem];
-    const kanjiInfoList = currentKanji.kanjis || [];
+    // Submit batch mỗi 5 giây
+    useEffect(() => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = setInterval(async () => {
+            if (reviewQueue.length > 0) {
+                const batch = [...reviewQueue];
+                setReviewQueue([]);
+                try {
+                    await submitManyReviews(batch);
+                    console.log('[FlashCard] Submitted batch:', batch);
+                    await fetchReviews();
+                } catch (err) {
+                    console.error('[FlashCard] Submit error:', err);
+                }
+            }
+        }, 5000);
+
+        return () => {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+        };
+    }, [reviewQueue]);
+
+    const current = reviewItems[currentItem];
+
+    // 🎉 Thông báo sau khi người dùng nhấn OK
+    if (!current && hasFinished) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen text-center px-4 animate-fade-in">
+                <h1 className="text-4xl md:text-6xl font-bold text-green-600 mb-4">🎉 Bạn đã ôn tập xong!</h1>
+                <p className="text-lg md:text-2xl text-muted-foreground">
+                    Không còn từ vựng cần ôn nữa. Hãy quay lại sau để tiếp tục luyện tập nhé!
+                </p>
+            </div>
+        );
+    }
+
+    // 💤 Nếu từ đầu đã không có từ nào cần ôn
+    if (!current) {
+        return <div className="text-center py-12 text-xl text-muted-foreground">Không có từ nào cần ôn tập.</div>;
+    }
 
     return (
         <>
             <div className="flex flex-col gap-3 justify-center items-center h-screen relative">
-                <div className="flex">
-                    <div className="flex mb-4 rounded-lg overflow-hidden border border-border bg-background">
-                        <button
-                            onClick={() => setSelectedOption("kanji")}
-                            className={`px-6 py-2 font-bold text-[15px] tracking-wider transition-all duration-300 ease-in-out
-                            ${selectedOption === "kanji"
-                                    ? "bg-[#303956] text-white"
-                                    : "bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-[#3b4454] dark:text-white dark:hover:bg-[#4b566a]"
-                                }
-                            focus:outline-none`}
-                        >
-                            Kanji
-                        </button>
-
-                        <button
-                            onClick={handleShuffle}
-                            className="px-3 md:px-6 py-2 font-bold text-[15px] tracking-wider transition-all duration-300 ease-in-out
-                            bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-[#3b4454] dark:text-white dark:hover:bg-[#4b566a] focus:outline-none"
-                        >
-                            {t("flashCard.mix") || "Mix"}
-                        </button>
-
-                        <button
-                            onClick={() => setSelectedOption("Furigana")}
-                            className={`px-6 py-2 font-bold text-[15px] tracking-wider transition-all duration-300 ease-in-out
-                            ${selectedOption === "Furigana"
-                                    ? "bg-[#303956] text-white"
-                                    : "bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-[#3b4454] dark:text-white dark:hover:bg-[#4b566a]"
-                                }
-                            focus:outline-none`}
-                        >
-                            Furigana
-                        </button>
-                    </div>
+                <div className="flex mb-4 rounded-lg overflow-hidden border border-border bg-background">
+                    <button
+                        onClick={handleShuffle}
+                        className="px-6 py-2 font-bold text-[15px] tracking-wider bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-[#3b4454] dark:text-white dark:hover:bg-[#4b566a]"
+                    >
+                        {t('flashCard.mix')}
+                    </button>
                 </div>
 
-                <div
-                    className={`transition-transform duration-500 ease-out ${slide ? "translate-x-[-100%] opacity-0" : "translate-x-0 opacity-100"
-                        }`}
-                >
+                <div className={`transition-transform duration-500 ease-out ${slide ? 'translate-x-[-100%] opacity-0' : 'translate-x-0 opacity-100'}`}>
                     <FlipCard
-                        frontContent={
-                            <h2 className="text-3xl md:text-5xl text-foreground">
-                                {selectedOption === "kanji" ? currentKanji.vocab : currentKanji.furigana}
-                            </h2>
-                        }
+                        frontContent={<h2 className="text-3xl md:text-5xl text-foreground">{current.vocab}</h2>}
                         backContent={
                             <div className="text-foreground text-lg md:text-2xl">
-                                <p>
-                                    <strong>Furigana: </strong>
-                                    {selectedOption === "kanji" ? currentKanji.furigana : currentKanji.vocab}
-                                </p>
-                                <p>
-                                    <strong> {t("flashCard.mean") || "Mean"}: </strong>
-                                    {getLocalized(currentKanji.mean_vi ?? "", currentKanji.mean_en ?? "")}
-                                </p>
-                                {kanjiInfoList.length > 0 && (
-                                    <div
-                                        className={`mt-4 border-t pt-2 grid ${kanjiInfoList.length >= 3 ? "grid-cols-2 gap-2" : "grid-cols-1"
-                                            }`}
-                                    >
-                                        {kanjiInfoList.map((kanji, index) => (
-                                            <div key={index} className="p-2">
-                                                <strong>Kanji: </strong>
-                                                <span className="text-2xl md:text-3xl">{kanji.kanji}</span>
-                                                <br />
-                                                {language === "vi" && (
-                                                    <>
-                                                        <strong>Âm Hán: </strong>
-                                                        {kanji.han_viet}
-                                                        <br />
-                                                    </>
-                                                )}
-                                                <strong>{t("flashCard.mean") || "Mean"}: </strong>
-                                                {getLocalized(kanji.meaning_vi, kanji.meaning_en)}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                                <p><strong>Furigana: </strong>{current.furigana}</p>
+                                <p><strong>{t('flashCard.mean')}: </strong>{getLocalized(current.mean_vi, current.mean_en)}</p>
                             </div>
                         }
                         axis={axis}
@@ -224,41 +157,36 @@ const FlashCardPage: React.FC = () => {
                         setFlipped={setFlipped}
                     />
                 </div>
+
                 <Card className="w-full max-w-md">
                     <CardContent className="p-4 flex flex-col sm:flex-row justify-between gap-2">
-                        <Button
-                            variant="destructive"
-                            className="flex-1 gap-2"
-                            onClick={() => handleReview("fail")}
-                        >
+                        <Button variant="destructive" className="flex-1 gap-2" onClick={() => handleReview('again')}>
                             <XCircle className="w-5 h-5" /> Quên
                         </Button>
-
-                        <Button
-                            variant="secondary"
-                            className="flex-1 gap-2"
-                            onClick={() => handleReview("partial")}
-                        >
+                        <Button variant="secondary" className="flex-1 gap-2" onClick={() => handleReview('good')}>
                             <AlertCircle className="w-5 h-5 text-yellow-500" /> Không nhớ lắm
                         </Button>
-
-                        <Button
-                            variant="default"
-                            className="flex-1 gap-2 bg-green-600 hover:bg-green-700 text-white"
-                            onClick={() => handleReview("pass")}
-                        >
+                        <Button variant="default" className="flex-1 gap-2 bg-green-600 hover:bg-green-700 text-white" onClick={() => handleReview('easy')}>
                             <CheckCircle className="w-5 h-5" /> Nhớ
                         </Button>
                     </CardContent>
                 </Card>
             </div>
+
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent>
                     <DialogTitle>🎉 Hoàn thành ôn tập!</DialogTitle>
-                    <DialogDescription>
-                        Bạn đã ôn tập hết tất cả từ vựng. Hãy tiếp tục luyện tập để ghi nhớ lâu hơn nhé!
-                    </DialogDescription>
-                    <Button onClick={() => setIsDialogOpen(false)}>OK</Button>
+                    <DialogDescription>Bạn đã ôn tập hết tất cả từ vựng. Hãy tiếp tục luyện tập để ghi nhớ lâu hơn nhé!</DialogDescription>
+                    <Button
+                        onClick={() => {
+                            setIsDialogOpen(false);
+                            if (reviewItems.length === 0) {
+                                setHasFinished(true);
+                            }
+                        }}
+                    >
+                        OK
+                    </Button>
                 </DialogContent>
             </Dialog>
         </>

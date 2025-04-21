@@ -16,11 +16,13 @@ const api = axios.create({
 });
 
 // Hàm làm mới accessToken
-async function refreshAccessToken() {
+async function refreshAccessToken(): Promise<string | null> {
+  if (typeof window === 'undefined') return null;
+
   const refreshToken = localStorage.getItem('refreshToken');
-  
   if (!refreshToken) {
-    throw new Error('No refresh token available');
+    console.warn('[AXIOS] No refresh token available.');
+    return null;
   }
 
   try {
@@ -35,17 +37,19 @@ async function refreshAccessToken() {
 
     return accessToken;
   } catch (error) {
-    console.error('Failed to refresh token:', error);
-    throw new Error('Failed to refresh token');
+    console.error('[AXIOS] Failed to refresh token:', error);
+    return null;
   }
 }
 
 // Interceptor yêu cầu API có token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -54,21 +58,22 @@ api.interceptors.request.use(
 
 // Interceptor xử lý khi có lỗi 401 và làm mới token
 api.interceptors.response.use(
-  response => response,
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    
-    // Kiểm tra lỗi 401 và tránh gọi lại nhiều lần
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      try {
-        const newAccessToken = await refreshAccessToken();
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-        return api(originalRequest); // Retry the original request
-      } catch (err) {
-        console.error('Error refreshing token:', err);
-        throw err;
+
+      const newAccessToken = await refreshAccessToken();
+
+      if (!newAccessToken) {
+        console.warn('[AXIOS] Unable to refresh access token. Redirect or logout needed.');
+        return Promise.reject(error);
       }
+
+      originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+      return api(originalRequest);
     }
 
     return Promise.reject(error);

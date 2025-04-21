@@ -1,3 +1,4 @@
+import { ReviewResult } from "./Review"
 export interface User{
     id: string
     email: string
@@ -36,13 +37,13 @@ export interface VocabSection {
   total: number;
 }
 
-export type ReviewResult = 'again' | 'good' | 'easy'; 
+
 
 export interface ReviewHistoryItem {
   id: string;
   userId: string;
   vocabId: string;
-  reviewDate: string; // ISO string, parse khi dùng nếu cần
+  reviewDate: string; 
   result: ReviewResult;
   notes: string | null;
 }
