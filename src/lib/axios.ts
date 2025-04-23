@@ -1,13 +1,13 @@
+// lib/axios.ts
 import axios from 'axios';
-import Cookies from 'js-cookie';
-
+import { refreshAccessToken } from '@/services/auth.service';
 const baseURL = process.env.NEXT_PUBLIC_NEST_API_URL;
 const vocabBaseURL = process.env.NEXT_PUBLIC_NEST_API_VOCAB_URL;
 
 console.log('[AXIOS] Base URL:', baseURL);
 console.log('[AXIOS] Vocab Base URL:', vocabBaseURL);
 
-// API có token
+// Axios instance cho API cần token
 const api = axios.create({
   baseURL,
   headers: {
@@ -15,34 +15,23 @@ const api = axios.create({
   },
 });
 
-// Hàm làm mới accessToken
-async function refreshAccessToken(): Promise<string | null> {
-  if (typeof window === 'undefined') return null;
+// async function refreshAccessToken(): Promise<string | null> {
+//   if (typeof window === 'undefined') return null;
 
-  const refreshToken = localStorage.getItem('refreshToken');
-  if (!refreshToken) {
-    console.warn('[AXIOS] No refresh token available.');
-    return null;
-  }
+//   try {
+//     const res = await fetch('/api/refresh-token');
+//     if (!res.ok) throw new Error('Refresh token failed');
 
-  try {
-    const response = await axios.post(`${baseURL}/auth/refresh`, { refreshToken });
-    const { accessToken, refreshToken: newRefreshToken } = response.data;
+//     const data = await res.json();
+//     localStorage.setItem('accessToken', data.accessToken);
+//     return data.accessToken;
+//   } catch (err) {
+//     console.error('[AXIOS] Failed to refresh token:', err);
+//     return null;
+//   }
+// }
 
-    // Lưu lại token mới vào localStorage và cookies
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', newRefreshToken);
-    Cookies.set('accessToken', accessToken, { expires: 7 });
-    Cookies.set('refreshToken', newRefreshToken, { expires: 7 });
-
-    return accessToken;
-  } catch (error) {
-    console.error('[AXIOS] Failed to refresh token:', error);
-    return null;
-  }
-}
-
-// Interceptor yêu cầu API có token
+// ✅ Gắn accessToken vào request header
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
@@ -56,7 +45,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor xử lý khi có lỗi 401 và làm mới token
+// ✅ Interceptor để xử lý lỗi 401 và tự động refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -66,9 +55,8 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       const newAccessToken = await refreshAccessToken();
-
       if (!newAccessToken) {
-        console.warn('[AXIOS] Unable to refresh access token. Redirect or logout needed.');
+        console.warn('[AXIOS] Unable to refresh token. Redirect or logout needed.');
         return Promise.reject(error);
       }
 
@@ -80,7 +68,7 @@ api.interceptors.response.use(
   }
 );
 
-// API không cần token
+// Không cần token
 const vocabApi = axios.create({
   baseURL: vocabBaseURL,
   headers: {

@@ -4,7 +4,6 @@ import { UserDetailsResponse } from '@/types/User';
 export async function getUserDetails(): Promise<UserDetailsResponse> {
     try {
       const res = await api.get<UserDetailsResponse>('/users/me/details');
-      console.log('data vocab detail', res.data.data);
       
       return res.data.data;
     } catch (error: any) {

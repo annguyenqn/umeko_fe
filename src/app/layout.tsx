@@ -6,6 +6,7 @@ import { Providers } from "@/components/providers/Providers";
 import { Navigation } from "@/components/layout/Navigation";
 import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
+import { InitAuth } from "@/components/auth/InitAuth";
 import { Metadata } from "next";
 // import { useAuthStore } from "@/store/useAuthStore";
 // import { useEffect } from "react";
@@ -63,6 +64,7 @@ export default function RootLayout({
           <Providers>
             <Navigation />
             <Toaster richColors />
+            <InitAuth />
             {children}
           </Providers>
         </main>
