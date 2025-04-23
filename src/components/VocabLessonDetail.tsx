@@ -11,6 +11,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { LearningStatus } from "@/types/User";
 import { useInitReviewBatch } from "@/hooks/useInitReviewBatch";
 import { useAuthStore } from "@/store/useAuthStore";
+import { motion } from "framer-motion";
 const learningStatusViMap: Record<LearningStatus, string> = {
     new: 'Người mới',
     learning: 'Đang học',
@@ -125,14 +126,28 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
                                         </span>
                                     ) : isAuthenticated ? (
                                         isAdded ? (
-                                            <div className="flex items-center gap-2 text-green-600 text-sm font-semibold animate-fade-in transition-all">
-                                                <CheckCircle2 className="w-4 h-4" />
-                                                Đã thêm
-                                            </div>
+                                            <motion.div
+                                                key={`added-${word.id}`}
+                                                initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                                                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                                                className="flex items-center gap-2 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-xl w-fit shadow-sm"
+                                            >
+                                                <motion.div
+                                                    initial={{ scale: 0 }}
+                                                    animate={{ scale: [1.3, 1] }}
+                                                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                                                >
+                                                    <CheckCircle2 className="w-4 h-6 text-green-500" />
+                                                </motion.div>
+                                                <span>Đã thêm</span>
+                                            </motion.div>
+
                                         ) : (
                                             <Button
                                                 onClick={() => handleAddVocab(word.id)}
-                                                className="w-[150px] bg-black h-[50px] my-3 flex items-center justify-center gap-2 rounded-xl cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-400 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0 text-white text-sm font-medium"
+                                                className="w-[140px] bg-black h-[40px] my-3 flex items-center justify-center gap-2 rounded-xl cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-blue-500 before:to-blue-400 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0 text-white text-sm font-medium"
                                             >
                                                 <Book className="w-4 h-4" />
                                                 Học từ này
