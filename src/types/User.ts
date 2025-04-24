@@ -29,7 +29,7 @@ export interface VocabItem {
   image_link: string;
   sound_link: string;
   word_type: string;
-  learningStatus?: LearningStatus; 
+  learningStatus: LearningStatus; 
 }
 
 export interface VocabSection {
@@ -54,10 +54,24 @@ export interface UserProgress {
   totalReviews: number;
   lastReview: string;
 }
+interface ProgressData {
+  userId: string;
+  totalWordsLearned: number;
+  totalReviews: number;
+  lastReview: string;
+}
+
 
 export interface UserDetailsResponse {
-  user: BasicUser;
-  vocab: VocabSection;
+  user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+  };
+  vocab: {
+      vocabList: VocabItem[];
+      total: number;
+  };
   reviewHistory: ReviewHistoryItem[];
-  progress: UserProgress;
+  progress: ProgressData;
 }
