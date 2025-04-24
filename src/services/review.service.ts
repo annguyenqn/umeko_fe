@@ -1,6 +1,7 @@
 // src/services/review.service.ts
 import { api } from '@/lib/axios';
 import { GetDueReviewsResponse, SubmitReviewDto } from '@/types/Review';
+import { ApiResponse } from '@/types/api';
 
 export async function initReviews(vocabIds: string[]): Promise<void> {
   try {

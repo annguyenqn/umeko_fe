@@ -1,9 +1,8 @@
-import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const body = await req.json();
 
-  // gọi NestJS login
   const res = await fetch(`${process.env.NEXT_PUBLIC_NEST_API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -16,14 +15,17 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify(data), { status: res.status });
   }
 
-  const cookieStore = cookies(); 
-  (await cookieStore).set('refreshToken', data.refreshToken, {
+  // Create a NextResponse object to set cookies
+  const response = NextResponse.json({ accessToken: data.accessToken });
+  
+  // Set the cookie on the response
+  response.cookies.set('refreshToken', data.refreshToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production' || false,
+    sameSite: 'lax',
     path: '/',
-    maxAge: 7 * 24 * 60 * 60,
+    maxAge: 7 * 24 * 60 * 60, // 7 days
   });
-
-  return Response.json({ accessToken: data.accessToken });
+  
+  return response;
 }
