@@ -1,12 +1,13 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
-import { getDueReviews, submitManyReviews } from '@/services/review.service';
-import { Card, CardContent } from '@/components/ui/card';
+import { useEffect, useState } from 'react';
+import { getDueReviews, submitManyReviews as apiSubmitReviews } from '@/services/review.service';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { CheckCircle, AlertCircle, XCircle, ChevronRight, Trophy } from 'lucide-react';
 import { ReviewResult } from '@/types/Review';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import FlipCard from '@/components/ui/FlipCard';
+import { Slider } from '@/components/ui/slider';
 
 interface ReviewItem {
     vocabId: string;
@@ -16,27 +17,85 @@ interface ReviewItem {
     mean_en: string;
 }
 
-const FlashCardPage: React.FC = () => {
+// New interface for session stats
+interface ReviewSessionStats {
+    total: number;
+    remembered: number;
+    somewhatRemembered: number;
+    forgotten: number;
+}
+
+const StudyPage: React.FC = () => {
+    // App states
     const [reviewItems, setReviewItems] = useState<ReviewItem[]>([]);
     const [currentItem, setCurrentItem] = useState(0);
     const [reviewQueue, setReviewQueue] = useState<{ vocabId: string; result: ReviewResult }[]>([]);
     const [flipped, setFlipped] = useState(false);
     const [axis, setAxis] = useState<'x' | 'y'>('x');
-    const [hasFinished, setHasFinished] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isTransitioning, setIsTransitioning] = useState(false);
-    const batchSubmitIntervalRef = useRef<NodeJS.Timeout | null>(null);
-    const pendingTransitionRef = useRef<boolean>(false);
+    const [pendingTransition, setPendingTransition] = useState(false);
+
+    // New states for improved flow
+    const [currentView, setCurrentView] = useState<'stats' | 'selection' | 'review' | 'summary'>('stats');
+    const [totalDueWords, setTotalDueWords] = useState(0);
+    const [selectedWordCount, setSelectedWordCount] = useState(10); // Default selection
+    const [sessionStats, setSessionStats] = useState<ReviewSessionStats>({
+        total: 0,
+        remembered: 0,
+        somewhatRemembered: 0,
+        forgotten: 0
+    });
 
     const t = (key: string) => ({ 'flashCard.mix': 'Mix', 'flashCard.mean': 'Mean' }[key] || key);
     const language: 'vi' | 'en' = 'vi';
     const getLocalized = (vi: string, en: string) => (language === 'vi' ? vi : en);
 
-    const fetchReviews = async () => {
+    // Fetch total due reviews count
+    // Thêm kiểm tra trong fetchDueWordsCount
+    const fetchDueWordsCount = async () => {
         setIsLoading(true);
         try {
             const { dueVocab } = await getDueReviews();
-            const mapped = dueVocab.map((vocab) => ({
+            console.log('[DEBUG] Fetched due words count:', dueVocab.length);
+            setTotalDueWords(dueVocab.length);
+
+            // Hiển thị thông tin chi tiết về từ vựng cần ôn tập nếu chỉ có 1 từ
+            if (dueVocab.length === 1) {
+                console.log('[DEBUG] Only one word needs review:', dueVocab[0]);
+            }
+
+            // Auto-adjust slider max value based on available words
+            if (dueVocab.length < selectedWordCount) {
+                setSelectedWordCount(Math.max(1, dueVocab.length));
+            }
+        } catch (err) {
+            console.error('[FlashCardPage] Fetch due words count error:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Start a new review session with selected number of words
+    const startReviewSession = async () => {
+        setIsLoading(true);
+        try {
+            const { dueVocab } = await getDueReviews();
+            console.log('[FlashCard] Due vocab fetched:', dueVocab.length);
+
+            // Take only the selected number of words
+            const wordsToReview = dueVocab.slice(0, selectedWordCount);
+            console.log('[FlashCard] Words to review:', wordsToReview.length);
+
+            // Nếu không có từ nào để ôn tập, hiển thị thông báo và quay về màn hình stats
+            if (wordsToReview.length === 0) {
+                console.log('[FlashCard] No words to review');
+                setIsLoading(false);
+                setCurrentView('stats');
+                return;
+            }
+
+            const mapped = wordsToReview.map((vocab) => ({
                 vocabId: vocab.id,
                 vocab: vocab.vocab,
                 furigana: vocab.furigana,
@@ -44,26 +103,34 @@ const FlashCardPage: React.FC = () => {
                 mean_en: vocab.mean_en,
             }));
 
-            // Only update if we actually got new items
-            if (mapped.length > 0) {
-                setReviewItems(mapped);
-                setCurrentItem(0);
-                setFlipped(false);
-                setHasFinished(false);
-            } else if (reviewItems.length === 0) {
-                // If we never had any items
-                setReviewItems([]);
-                setHasFinished(true);
-            }
+            // Initialize session
+            setReviewItems(mapped);
+            setCurrentItem(0);
+            setFlipped(false);
+            setReviewQueue([]);
+
+            // Reset session stats
+            setSessionStats({
+                total: mapped.length,
+                remembered: 0,
+                somewhatRemembered: 0,
+                forgotten: 0
+            });
+
+            // Switch to review mode
+            setCurrentView('review');
         } catch (err) {
-            console.error('[FlashCardPage] Fetch review error:', err);
+            console.error('[FlashCardPage] Start review session error:', err);
+            // Hiển thị thông báo lỗi
+            alert('Có lỗi xảy ra khi tải từ vựng. Vui lòng thử lại sau.');
+            setCurrentView('stats');
         } finally {
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchReviews();
+        fetchDueWordsCount();
 
         const resizeHandler = () => setAxis(window.innerWidth >= 768 ? 'x' : 'y');
         resizeHandler();
@@ -71,27 +138,35 @@ const FlashCardPage: React.FC = () => {
         return () => window.removeEventListener('resize', resizeHandler);
     }, []);
 
-    // Handle submitting all remaining reviews
-    const submitAllReviews = async () => {
-        if (reviewQueue.length > 0) {
-            try {
-                await submitManyReviews([...reviewQueue]);
-                console.log('[FlashCard] Submitted all remaining reviews:', reviewQueue);
-                setReviewQueue([]);
-                // setHasFinished(true); - Không cần thiết nữa vì đã đặt trước khi gọi API
-            } catch (err) {
-                console.error('[FlashCard] Submit all error:', err);
-                // Vẫn đánh dấu là hoàn thành, nhưng giữ lại queue để thử lại sau
-                // setHasFinished(true); - Không cần thiết nữa
-            }
+    // Submit all reviews in queue
+    // Kiểm tra lại implementation của submitManyReviews trong review.service.ts
+    const submitReviews = async (reviews: { vocabId: string; result: ReviewResult }[]) => {
+        console.log('[COMPONENT] Calling submitReviews with:', reviews);
+
+        // Đảm bảo có ít nhất một review để gửi
+        if (!reviews || reviews.length === 0) {
+            console.warn('[COMPONENT] No reviews to submit');
+            return { success: false, message: 'No reviews to submit' };
+        }
+
+        try {
+            // Gọi API từ service
+            console.log('[COMPONENT] Calling API submitManyReviews');
+            const result = await apiSubmitReviews(reviews);
+            console.log('[COMPONENT] API response:', result);
+            return result;
+        } catch (error) {
+            console.error('[COMPONENT] Error in submitReviews:', error);
+            throw error;
         }
     };
 
-    // Prevent conflicting transitions
-    const moveToNextCard = (index: number) => {
-        if (isTransitioning || pendingTransitionRef.current) return;
 
-        pendingTransitionRef.current = true;
+    // Handle card transition with animation
+    const moveToNextCard = (index: number) => {
+        if (isTransitioning || pendingTransition) return;
+
+        setPendingTransition(true);
         setIsTransitioning(true);
         setFlipped(false);
 
@@ -99,94 +174,345 @@ const FlashCardPage: React.FC = () => {
         setTimeout(() => {
             setCurrentItem(index);
             setIsTransitioning(false);
-            pendingTransitionRef.current = false;
+            setPendingTransition(false);
         }, 300);
     };
 
+
+    // Process user's answer for current card
     const handleReview = (result: ReviewResult) => {
         if (isTransitioning) return;
 
         const current = reviewItems[currentItem];
         if (!current) return;
 
+        // Thêm logging để debug
+        console.log(`[DEBUG] Processing review for word: ${current.vocab} with result: ${result}`);
+
+        // Add to review queue
         const newQueue = [...reviewQueue, { vocabId: current.vocabId, result }];
         setReviewQueue(newQueue);
 
-        if (currentItem < reviewItems.length - 1) {
-            moveToNextCard(currentItem + 1);
-        } else {
-            // Thêm dòng này trước để cập nhật UI ngay lập tức
-            setHasFinished(true);
+        // Thêm logging review queue
+        console.log(`[DEBUG] Updated review queue:`, newQueue);
 
-            // Last card completed - submit all reviews and finish
-            submitAllReviews();
+        // Update stats based on result
+        setSessionStats(prev => {
+            if (result === 'easy') {
+                return { ...prev, remembered: prev.remembered + 1 };
+            } else if (result === 'good') {
+                return { ...prev, somewhatRemembered: prev.somewhatRemembered + 1 };
+            } else {
+                return { ...prev, forgotten: prev.forgotten + 1 };
+            }
+        });
+
+        // Xử lý ngay lập tức nếu chỉ có 1 từ
+        if (reviewItems.length === 1) {
+            console.log(`[DEBUG] Only one word in the review list, submitting immediately`);
+            // Gọi API ngay lập tức và chuyển đến màn hình summary
+            submitReviews([...newQueue])
+                .then(() => {
+                    console.log(`[DEBUG] Review submitted successfully for single word`);
+                    setCurrentView('summary');
+                })
+                .catch(err => {
+                    console.error(`[ERROR] Failed to submit review for single word:`, err);
+                    // Vẫn chuyển sang summary để tránh mắc kẹt
+                    setCurrentView('summary');
+                });
+            return;
+        }
+
+        // Xử lý cho trường hợp từ cuối cùng trong danh sách
+        if (currentItem >= reviewItems.length - 1) {
+            console.log(`[DEBUG] Last word in the review list, submitting all reviews`);
+            // Gọi API và chuyển đến màn hình summary
+            submitReviews([...newQueue])
+                .then(() => {
+                    console.log(`[DEBUG] All reviews submitted successfully`);
+                    setCurrentView('summary');
+                })
+                .catch(err => {
+                    console.error(`[ERROR] Failed to submit all reviews:`, err);
+                    // Vẫn chuyển sang summary để tránh mắc kẹt
+                    setCurrentView('summary');
+                });
+        } else {
+            // Nếu còn từ tiếp theo, chuyển sang từ tiếp theo
+            moveToNextCard(currentItem + 1);
         }
     };
 
-    // const handleShuffle = () => {
-    //     if (isTransitioning || reviewItems.length <= 1) return;
+    // Sửa lại hàm endSession để gọi API trực tiếp thay vì qua submitAllReviews
+    const endSession = async () => {
+        console.log(`[DEBUG] Ending session with ${reviewQueue.length} reviews in queue`);
 
-    //     const shuffled = [...reviewItems]
-    //         .map((item) => ({ ...item, rand: Math.random() }))
-    //         .sort((a, b) => a.rand - b.rand)
-    //         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    //         .map(({ rand, ...rest }) => rest);
-
-    //     setIsTransitioning(true);
-    //     setFlipped(false);
-
-    //     setTimeout(() => {
-    //         setReviewItems(shuffled);
-    //         setCurrentItem(0);
-    //         setIsTransitioning(false);
-    //     }, 300);
-    // };
-
-    // Submit batch every 5 seconds
-    useEffect(() => {
-        // Clear existing interval to prevent duplicates
-        if (batchSubmitIntervalRef.current) {
-            clearInterval(batchSubmitIntervalRef.current);
-            batchSubmitIntervalRef.current = null;
+        if (reviewQueue.length > 0) {
+            try {
+                console.log(`[DEBUG] Submitting reviews from endSession:`, reviewQueue);
+                await submitReviews([...reviewQueue]);
+                console.log(`[DEBUG] Reviews submitted successfully from endSession`);
+            } catch (err) {
+                console.error(`[ERROR] Failed to submit reviews from endSession:`, err);
+            }
         }
 
-        batchSubmitIntervalRef.current = setInterval(async () => {
-            if (reviewQueue.length > 0 && !hasFinished) {
-                const batch = [...reviewQueue];
-                setReviewQueue([]); // Clear queue first to prevent duplicate submissions
+        // Luôn chuyển sang màn hình summary, ngay cả khi có lỗi
+        setCurrentView('summary');
+    };
 
-                try {
-                    await submitManyReviews(batch);
-                    console.log('[FlashCard] Submitted batch:', batch);
-                } catch (err) {
-                    console.error('[FlashCard] Submit error:', err);
-                    // Put failed reviews back in queue
-                    setReviewQueue(prev => [...prev, ...batch]);
-                }
-            }
-        }, 5000);
+    // Start a new session from the beginning
+    const startNewSession = () => {
+        setCurrentView('stats');
+        fetchDueWordsCount();
+    };
 
-        return () => {
-            if (batchSubmitIntervalRef.current) {
-                clearInterval(batchSubmitIntervalRef.current);
-                batchSubmitIntervalRef.current = null;
-            }
-        };
-    }, [reviewQueue, hasFinished]);
 
-    // Only fetch reviews again when all current items are processed
-    useEffect(() => {
-        if (reviewItems.length > 0 && currentItem >= reviewItems.length && !hasFinished) {
-            // All items reviewed, fetch more if available
-            fetchReviews();
-        }
-    }, [currentItem, reviewItems.length, hasFinished]);
+    // Render loading state
+    if (isLoading && currentView === 'stats') {
+        return (
+            <div className="flex items-center justify-center min-h-screen w-full">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+                    <p className="text-muted-foreground">Đang tải thông tin từ vựng...</p>
+                </div>
+            </div>
+        );
+    }
 
+    // Render initial statistics view
+    if (currentView === 'stats') {
+        return (
+            <div className="flex items-center justify-center min-h-screen w-full">
+                <AnimatePresence>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full max-w-md mx-auto p-4"
+                    >
+                        <Card className="shadow-lg">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-2xl text-center">Ôn tập từ vựng</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col items-center space-y-6">
+                                    <div className="flex flex-col items-center">
+                                        <span className="text-5xl font-bold text-primary">{totalDueWords}</span>
+                                        <span className="text-muted-foreground mt-2">Từ vựng cần ôn tập</span>
+                                    </div>
+
+                                    {totalDueWords > 0 ? (
+                                        <Button
+                                            size="lg"
+                                            className="w-full font-medium"
+                                            onClick={() => setCurrentView('selection')}
+                                        >
+                                            Bắt đầu ôn tập <ChevronRight className="ml-2 h-4 w-4" />
+                                        </Button>
+                                    ) : (
+                                        <div className="text-center p-4">
+                                            <p className="text-muted-foreground">
+                                                Không có từ vựng nào cần ôn tập vào lúc này.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+        );
+    }
+
+    // Render word count selection view
+    if (currentView === 'selection') {
+        return (
+            <div className="flex items-center justify-center min-h-screen w-full">
+                <AnimatePresence>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full max-w-md mx-auto p-4"
+                    >
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="text-2xl text-center">Chọn số lượng từ</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-lg font-medium">Số từ:</span>
+                                        <motion.span
+                                            key={selectedWordCount}
+                                            initial={{ scale: 1.2 }}
+                                            animate={{ scale: 1 }}
+                                            className="text-2xl font-bold text-primary"
+                                        >
+                                            {selectedWordCount}
+                                        </motion.span>
+                                    </div>
+
+                                    <Slider
+                                        value={[selectedWordCount]}
+                                        min={1}
+                                        max={Math.min(50, totalDueWords)}
+                                        step={1}
+                                        onValueChange={(value) => setSelectedWordCount(value[0])}
+                                        className="py-4"
+                                    />
+
+                                    <div className="flex justify-between text-sm text-muted-foreground">
+                                        <span>1</span>
+                                        <span>{Math.min(50, totalDueWords)}</span>
+                                    </div>
+
+                                    <div className="flex justify-between space-x-4 pt-4">
+                                        <Button
+                                            variant="outline"
+                                            className="flex-1"
+                                            onClick={() => setCurrentView('stats')}
+                                        >
+                                            Quay lại
+                                        </Button>
+                                        <Button
+                                            className="flex-1"
+                                            onClick={startReviewSession}
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? (
+                                                <span className="flex items-center">
+                                                    <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2"></span>
+                                                    Đang tải
+                                                </span>
+                                            ) : (
+                                                <>Bắt đầu ôn tập</>
+                                            )}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+        );
+    }
+
+    // Render summary view
+    if (currentView === 'summary') {
+        const { total, remembered, somewhatRemembered, forgotten } = sessionStats;
+        const completedWords = remembered + somewhatRemembered + forgotten;
+
+        return (
+            <div className="flex items-center justify-center min-h-screen w-full">
+                <AnimatePresence>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full max-w-md mx-auto p-4"
+                    >
+                        <Card className="shadow-lg">
+                            <CardHeader className="pb-4">
+                                <div className="flex justify-center mb-4">
+                                    <div className="rounded-full bg-green-100 p-3">
+                                        <Trophy className="h-8 w-8 text-green-600" />
+                                    </div>
+                                </div>
+                                <CardTitle className="text-2xl text-center">Kết quả ôn tập</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-6">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-muted-foreground">Số từ đã ôn tập:</span>
+                                        <span className="font-medium">{completedWords}/{total}</span>
+                                    </div>
+
+                                    {/* Progress bars */}
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span>Nhớ rõ:</span>
+                                                <span className="font-medium">{remembered} từ</span>
+                                            </div>
+                                            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                                                <motion.div
+                                                    className="h-full bg-green-500"
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${(remembered / total) * 100}%` }}
+                                                    transition={{ delay: 0.2, duration: 1 }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span>Nhớ lõm bõm:</span>
+                                                <span className="font-medium">{somewhatRemembered} từ</span>
+                                            </div>
+                                            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                                                <motion.div
+                                                    className="h-full bg-yellow-500"
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${(somewhatRemembered / total) * 100}%` }}
+                                                    transition={{ delay: 0.4, duration: 1 }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span>Chưa nhớ:</span>
+                                                <span className="font-medium">{forgotten} từ</span>
+                                            </div>
+                                            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                                                <motion.div
+                                                    className="h-full bg-red-500"
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${(forgotten / total) * 100}%` }}
+                                                    transition={{ delay: 0.6, duration: 1 }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Recommendation */}
+                                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                        <h3 className="font-medium text-blue-800 mb-1">Gợi ý:</h3>
+                                        <p className="text-sm text-blue-700">
+                                            {forgotten > remembered
+                                                ? "Bạn cần ôn tập thêm những từ vựng này. Hãy thử học với số lượng ít hơn mỗi lần."
+                                                : "Bạn đang tiến bộ tốt! Tiếp tục duy trì việc ôn tập hàng ngày để ghi nhớ lâu hơn."}
+                                        </p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                            <CardFooter>
+                                <Button
+                                    className="w-full"
+                                    onClick={startNewSession}
+                                >
+                                    Tiếp tục ôn tập
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+        );
+    }
+
+    // Main review interface (flashcards)
     const current = reviewItems[currentItem];
     const totalCards = reviewItems.length;
 
-    // Loading state
-    if (isLoading && reviewItems.length === 0) {
+    if (!current) {
         return (
             <div className="flex items-center justify-center min-h-screen w-full">
                 <div className="flex flex-col items-center gap-4">
@@ -197,61 +523,32 @@ const FlashCardPage: React.FC = () => {
         );
     }
 
-    // 🎉 Success message after all cards are completed
-    if (!current && hasFinished) {
-        return (
-            <div className="flex items-center justify-center min-h-screen w-full">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="flex flex-col items-center justify-center text-center px-4 max-w-md mx-auto"
-                >
-                    <h1 className="text-4xl md:text-6xl font-bold text-green-600 mb-4">🎉 Bạn đã ôn tập xong!</h1>
-                    <p className="text-lg md:text-2xl text-muted-foreground">
-                        Không còn từ vựng cần ôn nữa. Hãy quay lại sau để tiếp tục luyện tập nhé!
-                    </p>
-                </motion.div>
-            </div>
-        );
-    }
-
-    // 💤 If no words need review
-    if (!current) {
-        return (
-            <div className="flex items-center justify-center min-h-screen w-full">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex flex-col items-center justify-center text-center px-4 max-w-md mx-auto"
-                >
-                    <div className="text-5xl mb-6">💤</div>
-                    <h2 className="text-2xl font-semibold mb-2">Không có từ nào cần ôn tập</h2>
-                    <p className="text-muted-foreground">Hãy quay lại sau khi có từ vựng mới cần ôn tập</p>
-                </motion.div>
-            </div>
-        );
-    }
-
     return (
         <div className="flex items-center justify-center min-h-screen w-full">
-            <div className="flex flex-col  gap-4 justify-center items-center p-4 md:p-8 w-1/2 ">
-                {/* Progress indicator */}
-                <div className="w-full mb-2 flex items-center justify-between">
+            <div className="flex flex-col gap-4 justify-center items-center p-4 md:p-8 w-full max-w-xl">
+                {/* Header with progress indicator */}
+                <div className="w-full flex items-center justify-between">
                     <div className="text-sm font-medium">
                         <span className="text-primary text-lg">{currentItem + 1}</span>
                         <span className="mx-1 text-muted-foreground">/</span>
                         <span className="text-muted-foreground">{totalCards}</span>
                         <span className="ml-2 text-muted-foreground">từ cần ôn tập</span>
                     </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={endSession}
+                    >
+                        Kết thúc
+                    </Button>
                 </div>
 
-                {/* Progress bar */}
+                {/* Progress bar - fixed to show actual progress */}
                 <div className="w-full h-1 bg-muted rounded-full overflow-hidden mb-6">
                     <motion.div
                         className="h-full bg-primary"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${((currentItem) / totalCards) * 100}%` }}
+                        initial={{ width: `${((currentItem) / totalCards) * 100}%` }}
+                        animate={{ width: `${((currentItem + 1) / totalCards) * 100}%` }}
                         transition={{ duration: 0.3 }}
                     />
                 </div>
@@ -325,4 +622,4 @@ const FlashCardPage: React.FC = () => {
     );
 };
 
-export default FlashCardPage;
+export default StudyPage;
