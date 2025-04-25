@@ -40,20 +40,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
         addToReviewQueue(vocabId);
     };
 
-    const playAudio = useCallback((soundLink: string, id: string) => {
-        if (currentPlayingId === id) {
-            setCurrentPlayingId(null);
-            return;
-        }
-
-        const dynamicAudio = new Audio(soundLink);
-        dynamicAudio.play().then(() => {
-            setCurrentPlayingId(id);
-            dynamicAudio.onended = () => setCurrentPlayingId(null);
-        }).catch((err) => console.error("Audio playback error:", err));
-    }, [currentPlayingId]);
-
-    const playAudioExample = useCallback((text: string, id: string) => {
+    const playTTS = useCallback((text: string, id: string) => {
         window.speechSynthesis.cancel();
         if (currentPlayingId === id) {
             setCurrentPlayingId(null);
@@ -66,6 +53,30 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
         setCurrentPlayingId(id);
         window.speechSynthesis.speak(utterance);
     }, [currentPlayingId]);
+
+    const playAudio = useCallback((soundLink: string | undefined, vocabText: string, id: string) => {
+        if (currentPlayingId === id) {
+            setCurrentPlayingId(null);
+            return;
+        }
+
+        // If sound_link is empty or undefined, use TTS instead
+        if (!soundLink) {
+            playTTS(vocabText, id);
+            return;
+        }
+
+        // Otherwise play the audio file
+        const dynamicAudio = new Audio(soundLink);
+        dynamicAudio.play().then(() => {
+            setCurrentPlayingId(id);
+            dynamicAudio.onended = () => setCurrentPlayingId(null);
+        }).catch((err) => {
+            console.error("Audio playback error:", err);
+            // Fallback to TTS on error
+            playTTS(vocabText, id);
+        });
+    }, [currentPlayingId, playTTS]);
 
     const getStatusColor = (status: LearningStatus) => {
         switch (status) {
@@ -97,7 +108,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                onClick={() => playAudio(word.sound_link, `vocab-${word.id}`)}
+                                                onClick={() => playAudio(word.sound_link, word.vocab, `vocab-${word.id}`)}
                                                 aria-label="Play pronunciation"
                                                 className="hover:bg-accent rounded-full"
                                             >
@@ -193,7 +204,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => playAudioExample(ex.example_text, `example-${word.id}-${index}`)}
+                                                    onClick={() => playTTS(ex.example_text, `example-${word.id}-${index}`)}
                                                     aria-label="Play example pronunciation"
                                                     className="hover:bg-accent rounded-full"
                                                 >
