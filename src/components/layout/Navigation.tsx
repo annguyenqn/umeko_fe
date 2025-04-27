@@ -89,7 +89,7 @@ export function Navigation() {
                     {/* Mobile Menu Button */}
                     <div className="flex items-center gap-4 md:hidden">
                         <ThemeSwitcher />
-                        <LanguageSwitcher />
+                        {/* <LanguageSwitcher /> */}
                         <Button variant="ghost" size="icon" onClick={toggleMenu}>
                             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </Button>
