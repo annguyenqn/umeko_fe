@@ -79,7 +79,7 @@ export function Navigation() {
                                         <Link href="/login">{t('nav.login')}</Link>
                                     </Button>
                                     <Button asChild>
-                                        <Link href="/signup">{t('nav.signup')}</Link>
+                                        <Link href="/">{t('nav.signup')}</Link>
                                     </Button>
                                 </>
                             )}
@@ -100,7 +100,7 @@ export function Navigation() {
                 {isMenuOpen && (
                     <div className="border-t md:hidden">
                         <div className="flex flex-col space-y-4 p-4">
-                            <Link href="/kanji" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
+                            <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
                                 {t('nav.kanji')}
                             </Link>
                             <Link href="/vocabulary" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
