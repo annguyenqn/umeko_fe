@@ -14,7 +14,7 @@ export function InitAuth() {
                     localStorage.setItem('accessToken', data.accessToken);
                 }
             });
-    }, []);
+    }, [setAccessToken]);
 
     return null;
 }

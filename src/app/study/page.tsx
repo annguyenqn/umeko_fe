@@ -305,13 +305,20 @@ const StudyPage: React.FC = () => {
                                     </div>
 
                                     {totalDueWords > 0 ? (
-                                        <Button
-                                            size="lg"
-                                            className="w-full font-medium"
+                                        <button
+                                            // size="lg"
+                                            className="relative w-full h-10 font-medium overflow-hidden rounded-md bg-blue-500/30 backdrop-blur-lg border border-white/20 text-white  hover:shadow-xl hover:shadow-blue-600/50"
                                             onClick={() => setCurrentView('selection')}
                                         >
-                                            Bắt đầu ôn tập <ChevronRight className="ml-2 h-4 w-4" />
-                                        </Button>
+                                            <span className="relative z-10 flex items-center justify-center">
+                                                Bắt đầu ôn tập
+                                                <ChevronRight className="ml-2 h-4 w-4" />
+                                            </span>
+                                            {/* <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-13deg)_translateX(100%)]">
+                                                <div className="relative h-full w-10 bg-white/30"></div>
+                                            </div> */}
+                                        </button>
+
                                     ) : (
                                         <div className="text-center p-4">
                                             <p className="text-muted-foreground">

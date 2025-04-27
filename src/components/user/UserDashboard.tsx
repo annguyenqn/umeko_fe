@@ -226,7 +226,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                 variants={containerVariants}
             >
                 <motion.div variants={itemVariants}>
-                    <Card  >
+                    <Card>
                         <CardHeader className="pb-2">
                             <CardTitle className="flex items-center space-x-2">
                                 <BookOpen className="w-5 h-5 text-blue-500" />
@@ -243,14 +243,15 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ type: "spring", stiffness: 200 }}
                             >
-                                {data.progress.totalWordsLearned}
+                                {data.vocab.vocabList.length}
                             </motion.p>
-                            <Progress value={(data.progress.totalWordsLearned / 1000) * 100} className="w-full mt-2" />
+                            <Progress value={(data.vocab.vocabList.length / 1000) * 100} className="w-full mt-2" />
                             <p className="mt-2 text-sm text-muted-foreground">
-                                {data.progress.totalWordsLearned} / 1000 từ mục tiêu
+                                {data.vocab.vocabList.length} / 1000 từ mục tiêu
                             </p>
                         </CardContent>
                     </Card>
+
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
@@ -326,22 +327,28 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
+                                                <TableHead>STT</TableHead>
                                                 <TableHead>Từ Vựng</TableHead>
                                                 <TableHead>Furigana</TableHead>
                                                 <TableHead>Ý Nghĩa</TableHead>
                                                 <TableHead>Trạng Thái</TableHead>
-                                                <TableHead>Ngày Ôn</TableHead>
-                                                <TableHead>Kết Quả</TableHead>
+                                                <TableHead>Ngày Ôn Gần Nhất</TableHead>
+                                                <TableHead>Kết Quả Gần Nhất</TableHead>
                                             </TableRow>
                                         </TableHeader>
 
                                         <TableBody>
-                                            {data.reviewHistory.map((review, index) => {
-                                                const vocabItem = data.vocab.vocabList.find(
-                                                    (v) => v.id === review.vocabId
-                                                );
+                                            {Array.from(
+                                                new Map(
+                                                    data.reviewHistory
+                                                        .sort((a, b) => new Date(b.reviewDate).getTime() - new Date(a.reviewDate).getTime()) // Mới nhất lên trước
+                                                        .map((review) => [review.vocabId, review]) // Map theo vocabId
+                                                ).values()
+                                            ).map((review, index) => {
+                                                const vocabItem = data.vocab.vocabList.find((v) => v.id === review.vocabId);
                                                 return (
-                                                    <TableRow key={index}>
+                                                    <TableRow key={review.vocabId}>
+                                                        <TableCell>{index + 1}</TableCell>
                                                         <TableCell className="font-medium">{vocabItem?.vocab ?? 'N/A'}</TableCell>
                                                         <TableCell>{vocabItem?.furigana ?? 'N/A'}</TableCell>
                                                         <TableCell>{vocabItem?.mean_vi ?? 'N/A'}</TableCell>
@@ -373,6 +380,8 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                             })}
                                         </TableBody>
                                     </Table>
+
+
                                 </ScrollArea>
                             </CardContent>
                         </Card>
