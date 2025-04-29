@@ -16,6 +16,7 @@ interface AuthState {
   login: (email: string, password: string, router?: any) => Promise<void>
   logout: () => Promise<void>
   setAccessToken: (token: string) => void
+  clearAccessToken: () => void 
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -76,6 +77,10 @@ export const useAuthStore = create<AuthState>()(
       setAccessToken: (token) => {
         set({ accessToken: token })
         localStorage.setItem('accessToken', token)
+      },
+      clearAccessToken: () => {
+        localStorage.removeItem('accessToken')
+        set({ accessToken: null, isAuthenticated: false })
       },
     }),
     {
