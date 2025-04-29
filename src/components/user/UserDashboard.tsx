@@ -295,7 +295,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                 <Badge variant="outline">{nextMilestone()} từ</Badge>
                             </div>
                             <Progress
-                                value={(data.progress.totalWordsLearned / nextMilestone()) * 100}
+                                value={(data.vocab.vocabList.length / nextMilestone()) * 100}
                                 className="w-full"
                             />
                             <div className="mt-2 flex justify-between items-center">
