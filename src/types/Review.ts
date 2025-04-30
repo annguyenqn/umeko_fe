@@ -6,6 +6,18 @@ export interface SubmitReviewDto {
   vocabId: string;
   result: ReviewResult;
 }
+interface Kanji {
+  id: string;
+  kanji: string;
+  han_viet: string;
+  radicals: string;
+  strokes: number;
+  meaning_vi: string;
+  meaning_en: string;
+  on_reading: string[];
+  kun_reading: string[];
+  level: string;
+}
 export interface DueVocab {
     id: string;
     vocab: string;
@@ -15,6 +27,7 @@ export interface DueVocab {
     image_link: string;
     sound_link: string;
     word_type: string;
+    kanjis: Kanji[];
   }
   
   // ✅ Type cho metadata review

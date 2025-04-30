@@ -8,6 +8,7 @@ import { ReviewResult } from '@/types/Review';
 import { motion, AnimatePresence } from 'framer-motion';
 import FlipCard from '@/components/ui/FlipCard';
 import { Slider } from '@/components/ui/slider';
+import { Kanji } from '@/types/Vocab';
 
 interface ReviewItem {
     vocabId: string;
@@ -15,9 +16,8 @@ interface ReviewItem {
     furigana: string;
     mean_vi: string;
     mean_en: string;
+    kanjis: Kanji[];
 }
-
-// New interface for session stats
 interface ReviewSessionStats {
     total: number;
     remembered: number;
@@ -86,6 +86,8 @@ const StudyPage: React.FC = () => {
             // Take only the selected number of words
             const wordsToReview = dueVocab.slice(0, selectedWordCount);
             console.log('[FlashCard] Words to review:', wordsToReview.length);
+            console.log('word to review', wordsToReview);
+
 
             // Nếu không có từ nào để ôn tập, hiển thị thông báo và quay về màn hình stats
             if (wordsToReview.length === 0) {
@@ -101,6 +103,7 @@ const StudyPage: React.FC = () => {
                 furigana: vocab.furigana,
                 mean_vi: vocab.mean_vi,
                 mean_en: vocab.mean_en,
+                kanjis: vocab.kanjis
             }));
 
             // Initialize session
@@ -516,10 +519,9 @@ const StudyPage: React.FC = () => {
     }
 
     // Main review interface (flashcards)
-    const current = reviewItems[currentItem];
+    const vocabList = reviewItems[currentItem];
     const totalCards = reviewItems.length;
-
-    if (!current) {
+    if (!vocabList) {
         return (
             <div className="flex items-center justify-center min-h-screen w-full">
                 <div className="flex flex-col items-center gap-4">
@@ -563,7 +565,7 @@ const StudyPage: React.FC = () => {
                 <FlipCard
                     frontContent={
                         <div className="flex flex-col items-center justify-center h-full">
-                            <h2 className="text-3xl md:text-5xl text-foreground font-bold">{current.vocab}</h2>
+                            <h2 className="text-3xl md:text-5xl text-foreground font-bold">{vocabList.vocab}</h2>
                             {!flipped && (
                                 <motion.p
                                     initial={{ opacity: 0 }}
@@ -578,8 +580,24 @@ const StudyPage: React.FC = () => {
                     }
                     backContent={
                         <div className="text-foreground text-lg md:text-2xl">
-                            <p className="mb-2"><strong>Furigana: </strong>{current.furigana}</p>
-                            <p><strong>{t('flashCard.mean')}: </strong>{getLocalized(current.mean_vi, current.mean_en)}</p>
+                            <p className="mb-2"><strong>Furigana: </strong>{vocabList.furigana}</p>
+                            <p><strong>{t('flashCard.mean')}: </strong>{getLocalized(vocabList.mean_vi, vocabList.mean_en)}</p>
+                            {vocabList.kanjis.length > 0 && (
+                                <div className={`mt-4 border-t pt-2 grid ${vocabList.kanjis.length >= 3 ? 'grid-cols-2 gap-2' : 'grid-cols-1'}`}>
+                                    {vocabList.kanjis.map((kanji, index) => (
+                                        <div key={index} className="p-2">
+                                            <strong>Kanji: </strong><span className="text-2xl md:text-3xl">{kanji.kanji}</span><br />
+                                            {language === "vi" && (
+                                                <>
+                                                    <strong>Âm Hán: </strong>{kanji.han_viet}<br />
+                                                </>
+                                            )}
+                                            <strong>{t("flashCard.mean") || "Mean"}: </strong>{getLocalized(kanji.meaning_vi, kanji.meaning_en)}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
                         </div>
                     }
                     axis={axis}
