@@ -17,7 +17,6 @@ export async function POST(req: Request) {
 
   // Create a NextResponse object to set cookies
   const response = NextResponse.json({ accessToken: data.accessToken });
-  
   // Set the cookie on the response
   response.cookies.set('refreshToken', data.refreshToken, {
     httpOnly: true,
