@@ -44,8 +44,8 @@ export function Navigation() {
                             <Link href="/vocabulary" className="text-sm font-medium text-muted-foreground hover:text-primary">
                                 {t('nav.vocabulary')}
                             </Link>
-                            <Link href="/study" className="text-sm font-medium text-muted-foreground hover:text-primary">
-                                {t('nav.study')}
+                            <Link href="/review" className="text-sm font-medium text-muted-foreground hover:text-primary">
+                                Ôn tập
                             </Link>
                         </nav>
                         <div className="flex items-center gap-4">
@@ -106,8 +106,8 @@ export function Navigation() {
                             <Link href="/vocabulary" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
                                 {t('nav.vocabulary')}
                             </Link>
-                            <Link href="/study" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
-                                {t('nav.study')}
+                            <Link href="/review" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
+                                Ôn tập
                             </Link>
 
                             <div className="flex flex-col gap-2 pt-2">

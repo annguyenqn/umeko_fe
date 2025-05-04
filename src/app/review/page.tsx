@@ -25,7 +25,7 @@ interface ReviewSessionStats {
     forgotten: number;
 }
 
-const StudyPage: React.FC = () => {
+const ReviewPage: React.FC = () => {
     // App states
     const [reviewItems, setReviewItems] = useState<ReviewItem[]>([]);
     const [currentItem, setCurrentItem] = useState(0);
@@ -647,4 +647,4 @@ const StudyPage: React.FC = () => {
     );
 };
 
-export default StudyPage;
+export default ReviewPage;
