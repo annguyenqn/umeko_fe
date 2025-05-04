@@ -331,9 +331,9 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                                 <TableHead>Từ Vựng</TableHead>
                                                 <TableHead>Furigana</TableHead>
                                                 <TableHead>Ý Nghĩa</TableHead>
-                                                <TableHead>Trạng Thái</TableHead>
                                                 <TableHead>Ngày Ôn Gần Nhất</TableHead>
-                                                <TableHead>Kết Quả Gần Nhất</TableHead>
+                                                <TableHead>Trạng Thái</TableHead>
+                                                {/* <TableHead>Kết Quả Gần Nhất</TableHead> */}
                                             </TableRow>
                                         </TableHeader>
 
@@ -352,6 +352,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                                         <TableCell className="font-medium">{vocabItem?.vocab ?? 'N/A'}</TableCell>
                                                         <TableCell>{vocabItem?.furigana ?? 'N/A'}</TableCell>
                                                         <TableCell>{vocabItem?.mean_vi ?? 'N/A'}</TableCell>
+                                                        <TableCell>{new Date(review.reviewDate).toLocaleDateString('vi-VN')}</TableCell>
                                                         <TableCell>
                                                             <Badge
                                                                 className={cn(
@@ -365,8 +366,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                                                 {vocabItem?.learningStatus ?? 'N/A'}
                                                             </Badge>
                                                         </TableCell>
-                                                        <TableCell>{new Date(review.reviewDate).toLocaleDateString('vi-VN')}</TableCell>
-                                                        <TableCell>
+                                                        {/* <TableCell>
                                                             <Badge
                                                                 className={cn(
                                                                     review.result === "again" ? "bg-red-500" : "bg-green-500"
@@ -374,7 +374,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                                             >
                                                                 {review.result}
                                                             </Badge>
-                                                        </TableCell>
+                                                        </TableCell> */}
                                                     </TableRow>
                                                 );
                                             })}

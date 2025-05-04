@@ -581,7 +581,7 @@ const ReviewPage: React.FC = () => {
                     backContent={
                         <div className="text-foreground text-lg md:text-2xl">
                             <p className="mb-2"><strong>Furigana: </strong>{vocabList.furigana}</p>
-                            <p><strong>{t('flashCard.mean')}: </strong>{getLocalized(vocabList.mean_vi, vocabList.mean_en)}</p>
+                            <p><strong>Nghĩa: </strong>{getLocalized(vocabList.mean_vi, vocabList.mean_en)}</p>
                             {vocabList.kanjis.length > 0 && (
                                 <div className={`mt-4 border-t pt-2 grid ${vocabList.kanjis.length >= 3 ? 'grid-cols-2 gap-2' : 'grid-cols-1'}`}>
                                     {vocabList.kanjis.map((kanji, index) => (
@@ -592,7 +592,7 @@ const ReviewPage: React.FC = () => {
                                                     <strong>Âm Hán: </strong>{kanji.han_viet}<br />
                                                 </>
                                             )}
-                                            <strong>{t("flashCard.mean") || "Mean"}: </strong>{getLocalized(kanji.meaning_vi, kanji.meaning_en)}
+                                            <strong>Nghĩa: </strong>{getLocalized(kanji.meaning_vi, kanji.meaning_en)}
                                         </div>
                                     ))}
                                 </div>
