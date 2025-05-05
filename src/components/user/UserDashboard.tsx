@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 import { Calendar, ArrowUp, BarChart3, Award, Clock, BookOpen, Star } from "lucide-react";
 import Loading from "@/components/ui/loading";
 import Link from "next/link";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface UserDashboardProps {
     data: UserDetailsResponse;
@@ -80,6 +81,9 @@ export default function UserDashboard({ data }: UserDashboardProps) {
         { name: string; value: number; color: string }[]
     >([]);
     const [selectedView, setSelectedView] = useState<'day' | 'week' | 'month'>('week');
+
+    const [filterStatus, setFilterStatus] = useState<string>('all');
+
 
     useEffect(() => {
         // Tính toán dữ liệu biểu đồ ôn tập theo ngày
@@ -319,8 +323,28 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                     <TabsContent value="reviews">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Danh sách từ vựng đã ôn tập</CardTitle>
-                                <CardDescription>Thông tin từ lịch sử ôn tập</CardDescription>
+                                <div className="flex justify-between items-center w-full">
+                                    {/* Bên trái: Tiêu đề và mô tả */}
+                                    <div className="flex flex-col gap-1">
+                                        <CardTitle>Danh sách từ vựng đã ôn tập</CardTitle>
+                                        <CardDescription>Thông tin từ lịch sử ôn tập</CardDescription>
+                                    </div>
+
+                                    {/* Bên phải: Select filter */}
+                                    <Select onValueChange={(value) => setFilterStatus(value)} defaultValue="all">
+                                        <SelectTrigger className="w-[200px]">
+                                            <SelectValue placeholder="Filter by status" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">All</SelectItem>
+                                            <SelectItem value="new">New</SelectItem>
+                                            <SelectItem value="learning">Learning</SelectItem>
+                                            <SelectItem value="mastered">Mastered</SelectItem>
+                                            <SelectItem value="forgotten">Forgotten</SelectItem>
+                                            <SelectItem value="graduated">Graduated</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </CardHeader>
                             <CardContent>
                                 <ScrollArea className="h-[400px] w-full">
@@ -336,48 +360,43 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                                 {/* <TableHead>Kết Quả Gần Nhất</TableHead> */}
                                             </TableRow>
                                         </TableHeader>
-
                                         <TableBody>
                                             {Array.from(
                                                 new Map(
                                                     data.reviewHistory
-                                                        .sort((a, b) => new Date(b.reviewDate).getTime() - new Date(a.reviewDate).getTime()) // Mới nhất lên trước
-                                                        .map((review) => [review.vocabId, review]) // Map theo vocabId
+                                                        .sort((a, b) => new Date(b.reviewDate).getTime() - new Date(a.reviewDate).getTime())
+                                                        .map((review) => [review.vocabId, review])
                                                 ).values()
-                                            ).map((review, index) => {
-                                                const vocabItem = data.vocab.vocabList.find((v) => v.id === review.vocabId);
-                                                return (
-                                                    <TableRow key={review.vocabId}>
-                                                        <TableCell>{index + 1}</TableCell>
-                                                        <TableCell className="font-medium">{vocabItem?.vocab ?? 'N/A'}</TableCell>
-                                                        <TableCell>{vocabItem?.furigana ?? 'N/A'}</TableCell>
-                                                        <TableCell>{vocabItem?.mean_vi ?? 'N/A'}</TableCell>
-                                                        <TableCell>{new Date(review.reviewDate).toLocaleDateString('vi-VN')}</TableCell>
-                                                        <TableCell>
-                                                            <Badge
-                                                                className={cn(
-                                                                    vocabItem?.learningStatus === 'new' && 'bg-gray-500',
-                                                                    vocabItem?.learningStatus === 'learning' && 'bg-blue-500',
-                                                                    vocabItem?.learningStatus === 'mastered' && 'bg-green-600',
-                                                                    vocabItem?.learningStatus === 'forgotten' && 'bg-red-500',
-                                                                    vocabItem?.learningStatus === 'graduated' && 'bg-purple-500'
-                                                                )}
-                                                            >
-                                                                {vocabItem?.learningStatus ?? 'N/A'}
-                                                            </Badge>
-                                                        </TableCell>
-                                                        {/* <TableCell>
-                                                            <Badge
-                                                                className={cn(
-                                                                    review.result === "again" ? "bg-red-500" : "bg-green-500"
-                                                                )}
-                                                            >
-                                                                {review.result}
-                                                            </Badge>
-                                                        </TableCell> */}
-                                                    </TableRow>
-                                                );
-                                            })}
+                                            )
+                                                .filter((review) => {
+                                                    const vocabItem = data.vocab.vocabList.find((v) => v.id === review.vocabId);
+                                                    return filterStatus === 'all' || vocabItem?.learningStatus === filterStatus;
+                                                })
+                                                .map((review, index) => {
+                                                    const vocabItem = data.vocab.vocabList.find((v) => v.id === review.vocabId);
+                                                    return (
+                                                        <TableRow key={review.vocabId}>
+                                                            <TableCell>{index + 1}</TableCell>
+                                                            <TableCell className="font-medium">{vocabItem?.vocab ?? 'N/A'}</TableCell>
+                                                            <TableCell>{vocabItem?.furigana ?? 'N/A'}</TableCell>
+                                                            <TableCell>{vocabItem?.mean_vi ?? 'N/A'}</TableCell>
+                                                            <TableCell>{new Date(review.reviewDate).toLocaleDateString('vi-VN')}</TableCell>
+                                                            <TableCell>
+                                                                <Badge
+                                                                    className={cn(
+                                                                        vocabItem?.learningStatus === 'new' && 'bg-gray-500',
+                                                                        vocabItem?.learningStatus === 'learning' && 'bg-blue-500',
+                                                                        vocabItem?.learningStatus === 'mastered' && 'bg-green-600',
+                                                                        vocabItem?.learningStatus === 'forgotten' && 'bg-red-500',
+                                                                        vocabItem?.learningStatus === 'graduated' && 'bg-purple-500'
+                                                                    )}
+                                                                >
+                                                                    {vocabItem?.learningStatus ?? 'N/A'}
+                                                                </Badge>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                })}
                                         </TableBody>
                                     </Table>
 
