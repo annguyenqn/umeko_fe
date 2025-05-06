@@ -56,7 +56,9 @@ export function Navigation() {
                                     <DropdownMenuTrigger asChild>
                                         <div className="flex items-center gap-2 cursor-pointer">
                                             <Avatar>
-                                                <AvatarImage src={user.avatar || undefined} />
+                                                {/* <AvatarImage src={user.avatar || undefined} /> */}
+                                                <AvatarImage src="images\avatarDefault.png" alt="avartar" />
+
                                                 <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
                                             </Avatar>
                                             <span className="text-sm font-medium">{user.firstName}</span>
@@ -115,7 +117,9 @@ export function Navigation() {
                                     <>
                                         <div className="flex items-center gap-3">
                                             <Avatar>
-                                                <AvatarImage src={user.avatar || undefined} />
+                                                {/* <AvatarImage src={user.avatar || 'https://github.com/shadcn.png'} /> */}
+                                                <AvatarImage src="images\avatarDefault.png" alt="avartar" />
+
                                                 <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
                                             </Avatar>
                                             <span className="text-sm font-medium">{user.firstName}</span>
