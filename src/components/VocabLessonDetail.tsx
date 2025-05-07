@@ -12,6 +12,8 @@ import { LearningStatus } from "@/types/User";
 import { useInitReviewBatch } from "@/hooks/useInitReviewBatch";
 import { useAuthStore } from "@/store/useAuthStore";
 import { motion } from "framer-motion";
+import { useVocabStore } from "@/store/useVocabStore";
+
 const learningStatusViMap: Record<LearningStatus, string> = {
     new: 'Người mới',
     learning: 'Đang học',
@@ -27,18 +29,27 @@ type Props = {
     learnedVocabMap: Map<string, string>;
 };
 
+
 export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, learnedVocabMap }) => {
     const [currentPlayingId, setCurrentPlayingId] = useState<string | null>(null);
-    const [addedVocabIds, setAddedVocabIds] = useState<Set<string>>(new Set());
+    // const [addedVocabIds, setAddedVocabIds] = useState<Set<string>>(new Set());
+    const { addedVocabIds, setAddedVocabIds } = useVocabStore();
     const { addToReviewQueue } = useInitReviewBatch();
-    console.log('learned vocab ', learnedVocabMap);
     const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
     const getLocalizedContent = (vi: string, en: string) => language === "vi" ? vi : en;
 
     const handleAddVocab = (vocabId: string) => {
-        setAddedVocabIds(prev => new Set(prev).add(vocabId));
+        // Cập nhật trạng thái addedVocabIds
+        const updatedVocabIds = new Set(addedVocabIds);
+        updatedVocabIds.add(vocabId); // Thêm từ vựng vào Set
+
+        // Lưu trạng thái vào Zustand
+        setAddedVocabIds(updatedVocabIds);
+
+        // Gọi hàm addToReviewQueue
         addToReviewQueue(vocabId);
     };
+
 
     const playTTS = useCallback((text: string, id: string) => {
         window.speechSynthesis.cancel();

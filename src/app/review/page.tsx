@@ -47,7 +47,7 @@ const ReviewPage: React.FC = () => {
         forgotten: 0
     });
 
-    const t = (key: string) => ({ 'flashCard.mix': 'Mix', 'flashCard.mean': 'Mean' }[key] || key);
+    // const t = (key: string) => ({ 'flashCard.mix': 'Mix', 'flashCard.mean': 'Mean' }[key] || key);
     const language: 'vi' | 'en' = 'vi';
     const getLocalized = (vi: string, en: string) => (language === 'vi' ? vi : en);
 
