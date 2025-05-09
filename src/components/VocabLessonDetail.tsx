@@ -32,7 +32,6 @@ type Props = {
 
 export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, learnedVocabMap }) => {
     const [currentPlayingId, setCurrentPlayingId] = useState<string | null>(null);
-    // const [addedVocabIds, setAddedVocabIds] = useState<Set<string>>(new Set());
     const { addedVocabIds, setAddedVocabIds } = useVocabStore();
     const { addToReviewQueue } = useInitReviewBatch();
     const isAuthenticated = useAuthStore((s) => s.isAuthenticated);

@@ -6,9 +6,9 @@ type VocabStore = {
   };
 
 
-// Tạo store với kiểu VocabStore
+
 export const useVocabStore = create<VocabStore>((set) => ({
-  addedVocabIds: new Set<string>(), // Khởi tạo với Set rỗng
+  addedVocabIds: new Set<string>(),
   setAddedVocabIds: (newSet: Set<string>) => set({ addedVocabIds: newSet }),
   setAddedVocabIdsFromStorage: () => {
     const storedVocabIds = sessionStorage.getItem("addedVocabIds");
