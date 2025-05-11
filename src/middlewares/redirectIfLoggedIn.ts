@@ -2,7 +2,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export function redirectIfLoggedIn(request: NextRequest) {
-  const refreshToken = request.cookies.get('refresh_token')?.value
+  
+  const refreshToken = request.cookies.get('refreshToken')?.value
+
   const pathname = request.nextUrl.pathname
 
   const authOnlyRoutes = ['/login', '/signup']
