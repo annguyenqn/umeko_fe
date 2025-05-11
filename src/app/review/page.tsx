@@ -139,7 +139,7 @@ const ReviewPage: React.FC = () => {
         resizeHandler();
         window.addEventListener('resize', resizeHandler);
         return () => window.removeEventListener('resize', resizeHandler);
-    }, [fetchDueWordsCount]);
+    }, []);
 
     // Submit all reviews in queue
     // Kiểm tra lại implementation của submitManyReviews trong review.service.ts

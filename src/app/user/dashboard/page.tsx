@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import UserDashboard from '@/components/user/UserDashboard';
 import { useUserDashboardStore } from '@/store/userDashboardStore';
 import EmptyDashboardState from '@/components/user/EmptyDashboardState';
@@ -65,4 +65,4 @@ function DashboardSkeleton() {
         </div>
     );
 }
-export default withAuth(DashboardPage)
+export default withAuth(DashboardPage) as unknown as FC
