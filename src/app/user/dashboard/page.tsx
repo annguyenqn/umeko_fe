@@ -1,4 +1,3 @@
-// 📁 app/dashboard/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,8 +5,9 @@ import UserDashboard from '@/components/user/UserDashboard';
 import { useUserDashboardStore } from '@/store/userDashboardStore';
 import EmptyDashboardState from '@/components/user/EmptyDashboardState';
 import { Skeleton } from '@/components/ui/skeleton';
+import { withAuth } from '@/components/user/withAuth';
 
-export default function DashboardPage() {
+function DashboardPage() {
     const fetchUserDetails = useUserDashboardStore((s) => s.fetchUserDetails);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -65,3 +65,4 @@ function DashboardSkeleton() {
         </div>
     );
 }
+export default withAuth(DashboardPage)
