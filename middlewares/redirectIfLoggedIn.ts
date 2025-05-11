@@ -9,7 +9,7 @@ export function redirectIfLoggedIn(request: NextRequest) {
   const isAuthOnly = authOnlyRoutes.some(route => pathname.startsWith(route))
 
   if (refreshToken && isAuthOnly) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    return NextResponse.redirect(new URL('/user/dashboard', request.url))
   }
 
   return null 
