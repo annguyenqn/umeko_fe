@@ -40,7 +40,7 @@ interface UserDashboardProps {
     data: UserDetailsResponse;
 }
 
-// Animation variants
+
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -63,14 +63,6 @@ const itemVariants = {
     }
 };
 
-// const pulseAnimation = {
-//     scale: [1, 1.02, 1],
-//     transition: {
-//         duration: 2,
-//         repeat: Infinity,
-//         ease: "easeInOut"
-//     }
-// };
 
 export default function UserDashboard({ data }: UserDashboardProps) {
     const [loading, setLoading] = useState(true);
