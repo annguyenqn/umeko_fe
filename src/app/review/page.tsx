@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import FlipCard from '@/components/ui/FlipCard';
 import { Slider } from '@/components/ui/slider';
 import { Kanji } from '@/types/Vocab';
-
+import { shuffleArray } from '@/utils/array';
 interface ReviewItem {
     vocabId: string;
     vocab: string;
@@ -81,14 +81,9 @@ const ReviewPage: React.FC = () => {
         setIsLoading(true);
         try {
             const { dueVocab } = await getDueReviews();
-            console.log('[FlashCard] Due vocab fetched:', dueVocab.length);
-
+            const shuffledVocab = shuffleArray(dueVocab);
             // Take only the selected number of words
-            const wordsToReview = dueVocab.slice(0, selectedWordCount);
-            console.log('[FlashCard] Words to review:', wordsToReview.length);
-            console.log('word to review', wordsToReview);
-
-
+            const wordsToReview = shuffledVocab.slice(0, selectedWordCount);
             // Nếu không có từ nào để ôn tập, hiển thị thông báo và quay về màn hình stats
             if (wordsToReview.length === 0) {
                 console.log('[FlashCard] No words to review');
@@ -96,7 +91,6 @@ const ReviewPage: React.FC = () => {
                 setCurrentView('stats');
                 return;
             }
-
             const mapped = wordsToReview.map((vocab) => ({
                 vocabId: vocab.id,
                 vocab: vocab.vocab,
@@ -105,7 +99,6 @@ const ReviewPage: React.FC = () => {
                 mean_en: vocab.mean_en,
                 kanjis: vocab.kanjis
             }));
-
             // Initialize session
             setReviewItems(mapped);
             setCurrentItem(0);
