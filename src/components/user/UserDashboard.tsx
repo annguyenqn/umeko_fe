@@ -35,7 +35,7 @@ import { Calendar, ArrowUp, BarChart3, Award, Clock, BookOpen, Star } from "luci
 import Loading from "@/components/ui/loading";
 import Link from "next/link";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-
+import NotificationListener from "../notify/NotificationListener";
 interface UserDashboardProps {
     data: UserDetailsResponse;
 }
@@ -192,6 +192,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
     //         .sort((a, b) => (b.good / b.total) - (a.good / a.total))
     //         .slice(0, 3);
     // };
+    console.log('user', data.user);
 
     if (loading) {
         return (
@@ -221,6 +222,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                 className="grid grid-cols-1 md:grid-cols-3 gap-6"
                 variants={containerVariants}
             >
+
                 <motion.div variants={itemVariants}>
                     <Card className="relative overflow-hidden border-blue-300 dark:border-blue-800 bg-white dark:bg-gray-950 hover:bg-blue-50 dark:hover:bg-blue-950/50 transition-all">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-100/80 to-transparent dark:from-blue-900/20 dark:to-transparent pointer-events-none" />
@@ -256,6 +258,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                             </p>
                         </CardContent>
                     </Card>
+                    <NotificationListener userId={data.user.id} />
                 </motion.div>
 
 
@@ -286,7 +289,9 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                 <p className="text-sm font-medium text-green-700 dark:text-green-400">Tốc độ học:</p>
                                 <Badge className="bg-green-200 text-green-800 hover:bg-green-300 dark:bg-green-800 dark:text-green-200 font-medium">{calculateLearningRate()} từ/ngày</Badge>
                             </div>
+
                         </CardContent>
+
                     </Card>
                 </motion.div>
 
