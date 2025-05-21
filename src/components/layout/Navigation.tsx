@@ -16,12 +16,14 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuthStore } from '@/store/useAuthStore'
+import NotificationListener from '../notify/NotificationListener'
 
 export function Navigation() {
     const { t } = useLanguage()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const { user, logout, isAuthenticated } = useAuthStore()
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+    console.log('this is user data', user);
 
     // if (!hasHydrated) return null
     return (
@@ -52,29 +54,34 @@ export function Navigation() {
                             <ThemeSwitcher />
                             <LanguageSwitcher />
                             {isAuthenticated && user ? (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <div className="flex items-center gap-2 cursor-pointer">
-                                            <Avatar>
-                                                {/* <AvatarImage src={user.avatar || undefined} /> */}
-                                                <AvatarImage src="images\avatarDefault.png" alt="avartar" />
+                                <>
+                                    {/* Notification component added here */}
+                                    {user && <NotificationListener userId={(user as any).user?.id} />}
 
-                                                <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <span className="text-sm font-medium">{user.firstName}</span>
-                                        </div>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/user/dashboard" className="w-full flex gap-2">
-                                                <SquareUserRound></SquareUserRound>  {'Tiến độ học'}
-                                            </Link>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={logout} className="gap-2 text-destructive">
-                                            <LogOut className="w-4 h-4" /> {t('nav.logout') || 'Đăng xuất'}
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <div className="flex items-center gap-2 cursor-pointer">
+                                                <Avatar>
+                                                    {/* <AvatarImage src={user.avatar || undefined} /> */}
+                                                    <AvatarImage src="images\avatarDefault.png" alt="avartar" />
+
+                                                    <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <span className="text-sm font-medium">{user.firstName}</span>
+                                            </div>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/user/dashboard" className="w-full flex gap-2">
+                                                    <SquareUserRound></SquareUserRound>  {'Tiến độ học'}
+                                                </Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={logout} className="gap-2 text-destructive">
+                                                <LogOut className="w-4 h-4" /> {t('nav.logout') || 'Đăng xuất'}
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </>
                             ) : (
                                 <>
                                     <Button variant="ghost" asChild>
@@ -91,6 +98,8 @@ export function Navigation() {
                     {/* Mobile Menu Button */}
                     <div className="flex items-center gap-4 md:hidden">
                         <ThemeSwitcher />
+                        {/* Notification component for mobile */}
+                        {isAuthenticated && user && user.id && <NotificationListener userId={user.id} />}
                         {/* <LanguageSwitcher /> */}
                         <Button variant="ghost" size="icon" onClick={toggleMenu}>
                             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

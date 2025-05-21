@@ -35,7 +35,6 @@ import { Calendar, ArrowUp, BarChart3, Award, Clock, BookOpen, Star } from "luci
 import Loading from "@/components/ui/loading";
 import Link from "next/link";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import NotificationListener from "../notify/NotificationListener";
 interface UserDashboardProps {
     data: UserDetailsResponse;
 }
@@ -258,7 +257,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                             </p>
                         </CardContent>
                     </Card>
-                    <NotificationListener userId={data.user.id} />
+                    {/* <NotificationListener userId={data.user.id} /> */}
                 </motion.div>
 
 

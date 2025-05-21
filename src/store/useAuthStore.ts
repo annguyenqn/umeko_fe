@@ -36,7 +36,7 @@ export const useAuthStore = create<AuthState>()(
             user: {
               ...data,
               // avatar: data.avatarUrl || data.avatar,
-              id: '',
+              id: data.user.id,
               email: '',
               refreshToken: '',
               firstName: '',
