@@ -42,7 +42,6 @@ export default function NotificationListener({ userId }: { userId: string }) {
         };
     }, [userId]);
 
-    // Đóng dropdown khi click ra ngoài
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -61,11 +60,11 @@ export default function NotificationListener({ userId }: { userId: string }) {
 
     return (
         <div className="fixed top-4 right-4 z-50" ref={containerRef}>
-            {/* Bell icon */}
-            <div className="relative cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
-                <Bell className="w-6 h-6 text-black" />
+            {/* Bell icon - giữ kích thước cố định */}
+            <div className="relative w-10 h-10 flex items-center justify-center cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+                <Bell className="w-6 h-6 text-black dark:text-white" />
                 {notifications.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                    <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
                         {notifications.length}
                     </span>
                 )}
@@ -73,20 +72,24 @@ export default function NotificationListener({ userId }: { userId: string }) {
 
             {/* Dropdown Notifications */}
             {isOpen && (
-                <div className="mt-2 w-80 max-h-96 overflow-y-auto bg-white shadow-xl rounded-xl p-4">
-                    <h4 className="font-bold mb-2 text-black">🔔 Notifications</h4>
+                <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white dark:bg-gray-800 shadow-xl rounded-xl p-4 border border-gray-200 dark:border-gray-600">
+                    <h4 className="font-bold mb-2 text-black dark:text-white">🔔 Notifications</h4>
                     {notifications.length === 0 ? (
-                        <p className="text-sm text-gray-500">No notifications</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">No notifications</p>
                     ) : (
                         notifications.map((noti, index) => (
-                            <div key={index} className="mt-2 border-b pb-2">
-                                <p className="text-black">{noti.content}</p>
-                                <span className="text-xs text-gray-500">{noti.type}</span>
+                            <div
+                                key={index}
+                                className="mb-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700"
+                            >
+                                <p className="text-sm text-gray-900 dark:text-white">{noti.content}</p>
+                                <span className="text-xs text-gray-500 dark:text-gray-400">{noti.type}</span>
                             </div>
                         ))
                     )}
                 </div>
             )}
         </div>
+
     );
 }
