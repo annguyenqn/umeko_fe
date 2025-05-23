@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { Menu, X, LogOut, SquareUserRound } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Container } from '@/components/ui/container'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+// import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -52,7 +52,7 @@ export function Navigation() {
                         </nav>
                         <div className="flex items-center gap-4">
                             <ThemeSwitcher />
-                            <LanguageSwitcher />
+                            {/* <LanguageSwitcher /> */}
                             {isAuthenticated && user ? (
                                 <>
                                     {/* Notification component added here */}
