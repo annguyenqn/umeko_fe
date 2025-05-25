@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { Menu, X, LogOut, SquareUserRound } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Container } from '@/components/ui/container'
-// import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -23,9 +22,7 @@ export function Navigation() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const { user, logout, isAuthenticated } = useAuthStore()
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
-    console.log('this is user data', user);
 
-    // if (!hasHydrated) return null
     return (
         <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <Container>
@@ -52,19 +49,14 @@ export function Navigation() {
                         </nav>
                         <div className="flex items-center gap-4">
                             <ThemeSwitcher />
-                            {/* <LanguageSwitcher /> */}
-                            {isAuthenticated && user ? (
+                            {isAuthenticated && user && (
                                 <>
-                                    {/* Notification component added here */}
-                                    {user && <NotificationListener userId={(user as any).user?.id} />}
-
+                                    <NotificationListener userId={user.id} />
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <div className="flex items-center gap-2 cursor-pointer">
                                                 <Avatar>
-                                                    {/* <AvatarImage src={user.avatar || undefined} /> */}
-                                                    <AvatarImage src="images\avatarDefault.png" alt="avartar" />
-
+                                                    <AvatarImage src="images/avatarDefault.png" alt="avatar" />
                                                     <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
                                                 </Avatar>
                                                 <span className="text-sm font-medium">{user.firstName}</span>
@@ -73,7 +65,7 @@ export function Navigation() {
                                         <DropdownMenuContent align="end">
                                             <DropdownMenuItem asChild>
                                                 <Link href="/user/dashboard" className="w-full flex gap-2">
-                                                    <SquareUserRound></SquareUserRound>  {'Tiến độ học'}
+                                                    <SquareUserRound /> {'Tiến độ học'}
                                                 </Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={logout} className="gap-2 text-destructive">
@@ -82,7 +74,8 @@ export function Navigation() {
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </>
-                            ) : (
+                            )}
+                            {!isAuthenticated && (
                                 <>
                                     <Button variant="ghost" asChild>
                                         <Link href="/login">{t('nav.login')}</Link>
@@ -96,11 +89,12 @@ export function Navigation() {
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="flex items-center gap-4 md:hidden">
+                    <div className="flex items-center gap-2 md:hidden">
                         <ThemeSwitcher />
-                        {/* Notification component for mobile */}
-                        {isAuthenticated && user && user.id && <NotificationListener userId={user.id} />}
-                        {/* <LanguageSwitcher /> */}
+                        {/* Notification cho mobile - nằm trong navigation bar */}
+                        {isAuthenticated && user && (
+                            <NotificationListener userId={user.id} />
+                        )}
                         <Button variant="ghost" size="icon" onClick={toggleMenu}>
                             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </Button>
@@ -111,7 +105,7 @@ export function Navigation() {
                 {isMenuOpen && (
                     <div className="border-t md:hidden">
                         <div className="flex flex-col space-y-4 p-4">
-                            <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
+                            <Link href="/kanji" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
                                 {t('nav.kanji')}
                             </Link>
                             <Link href="/vocabulary" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
@@ -126,16 +120,14 @@ export function Navigation() {
                                     <>
                                         <div className="flex items-center gap-3">
                                             <Avatar>
-                                                {/* <AvatarImage src={user.avatar || 'https://github.com/shadcn.png'} /> */}
-                                                <AvatarImage src="images\avatarDefault.png" alt="avartar" />
-
+                                                <AvatarImage src="images/avatarDefault.png" alt="avatar" />
                                                 <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
                                             </Avatar>
                                             <span className="text-sm font-medium">{user.firstName}</span>
                                         </div>
                                         <Button variant="ghost" asChild className="justify-start">
-                                            <Link className='flex gap-2' href="/user/dashboard" onClick={() => setIsMenuOpen(false)}>
-                                                <SquareUserRound></SquareUserRound> {'Tiến độ học'}
+                                            <Link className="flex gap-2" href="/user/dashboard" onClick={() => setIsMenuOpen(false)}>
+                                                <SquareUserRound /> {'Tiến độ học'}
                                             </Link>
                                         </Button>
                                         <Button variant="ghost" className="justify-start text-destructive" onClick={logout}>
