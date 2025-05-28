@@ -302,18 +302,17 @@ const ReviewPage: React.FC = () => {
 
                                     {totalDueWords > 0 ? (
                                         <button
-                                            // size="lg"
-                                            className="relative w-full h-10 font-medium overflow-hidden rounded-md bg-blue-500/30 backdrop-blur-lg border border-white/20 text-white  hover:shadow-xl hover:shadow-blue-600/50"
+                                            className="relative w-full h-10 font-medium overflow-hidden rounded-md  text-white dark:text-white  bg-blue-600/90
+                                                     dark:bg-blue-500/30 border border-blue-300 dark:border-white/20  backdrop-blur-md
+                                                      hover:shadow-lg hover:bg-blue-700 dark:hover:shadow-blue-600/50  transition-all duration-300"
                                             onClick={() => setCurrentView('selection')}
                                         >
                                             <span className="relative z-10 flex items-center justify-center">
                                                 Bắt đầu ôn tập
                                                 <ChevronRight className="ml-2 h-4 w-4" />
                                             </span>
-                                            {/* <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-13deg)_translateX(100%)]">
-                                                <div className="relative h-full w-10 bg-white/30"></div>
-                                            </div> */}
                                         </button>
+
 
                                     ) : (
                                         <div className="text-center p-4">
