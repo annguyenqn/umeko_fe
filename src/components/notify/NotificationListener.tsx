@@ -8,7 +8,9 @@ interface Notification {
     id: string;
     content: string;
     type: string;
+    read: boolean;
 }
+
 
 export default function NotificationListener({ userId }: { userId: string }) {
     const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -58,25 +60,41 @@ export default function NotificationListener({ userId }: { userId: string }) {
         };
     }, []);
 
-    const markAsRead = async (id: string) => {
-        try {
-            await fetch(`http://14.225.217.126:8084/Notification/${id}/read`, {
-                method: 'POST',
-            });
+    const markAsUnreadBulk = async (ids: string[]) => {
+        if (!ids.length) return;
 
-            // Xoá thông báo đã đọc khỏi danh sách
-            setNotifications((prev) => prev.filter((noti) => noti.id !== id));
+        try {
+            await fetch(`http://14.225.217.126:8084/Notification/unread-bulk`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids }),
+            });
+            console.log('✅ Marked as unread:', ids);
         } catch (err) {
-            console.error('❌ Failed to mark notification as read:', err);
+            console.error('❌ Failed to mark as unread:', err);
         }
     };
+
 
     return (
         <div className="relative z-50" ref={containerRef}>
             {/* Bell icon */}
             <div
                 className="relative w-10 h-10 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => {
+                    setIsOpen((prev) => {
+                        const nextState = !prev;
+                        if (!prev) {
+                            // Chỉ gọi khi mở dropdown
+                            const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id);
+                            if (unreadIds.length > 0) {
+                                markAsUnreadBulk(unreadIds);
+                            }
+                        }
+                        return nextState;
+                    });
+                }}
+
             >
                 <Bell className="w-6 h-6 text-black dark:text-white" />
                 {notifications.length > 0 && (
@@ -93,10 +111,16 @@ export default function NotificationListener({ userId }: { userId: string }) {
                     {notifications.length === 0 ? (
                         <p className="text-sm text-gray-500 dark:text-gray-400">No notifications</p>
                     ) : (
-                        notifications.map((noti) => (
+                        notifications.map((noti, index) => (
                             <div
-                                key={noti.id}
-                                onClick={() => markAsRead(noti.id)}
+                                key={noti.id || `notification-${index}`}
+                                onClick={() => {
+                                    setIsOpen(!isOpen);
+                                    const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id);
+                                    if (unreadIds.length > 0) {
+                                        markAsUnreadBulk(unreadIds);
+                                    }
+                                }}
                                 className="mb-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition"
                             >
                                 <p className="text-sm text-gray-900 dark:text-white break-words">{noti.content}</p>
