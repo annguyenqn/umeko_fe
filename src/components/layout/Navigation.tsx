@@ -68,6 +68,11 @@ export function Navigation() {
                                                     <SquareUserRound /> {'Tiến độ học'}
                                                 </Link>
                                             </DropdownMenuItem>
+                                            <DropdownMenuItem asChild>
+                                                <Link href="/user/vocab-custom" className="w-full flex gap-2">
+                                                    <SquareUserRound /> {'Tạo bộ từ vựng'}
+                                                </Link>
+                                            </DropdownMenuItem>
                                             <DropdownMenuItem onClick={logout} className="gap-2 text-destructive">
                                                 <LogOut className="w-4 h-4" /> {t('nav.logout') || 'Đăng xuất'}
                                             </DropdownMenuItem>
