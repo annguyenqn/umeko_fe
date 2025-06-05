@@ -223,15 +223,15 @@ export default function UserDashboard({ data }: UserDashboardProps) {
             >
 
                 <motion.div variants={itemVariants}>
-                    <Card className="relative overflow-hidden border-blue-300 dark:border-blue-800 bg-white dark:bg-gray-950 hover:bg-blue-50 dark:hover:bg-blue-950/50 transition-all">
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-100/80 to-transparent dark:from-blue-900/20 dark:to-transparent pointer-events-none" />
-                        <div className="absolute left-0 top-0 h-full w-1 bg-blue-500"></div>
+                    <Card className="relative overflow-hidden border-gray-600 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-200/40 to-transparent dark:from-gray-700/10 dark:to-transparent pointer-events-none" />
+                        <div className="absolute left-0 top-0 h-full w-1 bg-gray-500"></div>
                         <CardHeader className="pb-2 relative">
                             <CardTitle className="flex items-center space-x-2">
-                                <div className="flex justify-center items-center p-1 rounded-md bg-blue-100 dark:bg-blue-900/30">
-                                    <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                <div className="flex justify-center items-center p-1 rounded-md bg-gray-300 dark:bg-gray-700">
+                                    <BookOpen className="w-5 h-5 text-gray-900 dark:text-gray-300" />
                                 </div>
-                                <span className="text-blue-800 dark:text-blue-300 font-bold">Tổng Số Từ Đã Học</span>
+                                <span className="text-gray-900 dark:text-gray-100 font-bold">Tổng Số Từ Đã Học</span>
                             </CardTitle>
                             <CardDescription>
                                 Cập nhật đến {new Date(data.progress.lastReview).toLocaleDateString('vi-VN')}
@@ -239,92 +239,99 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                         </CardHeader>
                         <CardContent className="relative">
                             <motion.p
-                                className="text-4xl font-bold !text-blue-700 !dark:text-blue-300"
+                                className="text-4xl font-bold text-gray-300"
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                transition={{ type: "spring", stiffness: 200 }}
-                                style={{ color: 'var(--blue-700)', textShadow: 'none' }}
+                                transition={{ type: 'spring', stiffness: 200 }}
                             >
                                 {data.vocab.vocabList.length}
                             </motion.p>
+
                             <Progress
                                 value={(data.vocab.vocabList.length / 1000) * 100}
-                                className="w-full mt-2 h-2 bg-blue-100 dark:bg-blue-900/30"
-                                indicatorClassName="bg-blue-600 dark:bg-blue-500"
+                                className="w-full mt-2 h-2 bg-gray-300 dark:bg-gray-800"
+                                indicatorClassName="bg-gray-300 dark:bg-gray-200"
                             />
-                            <p className="mt-2 text-sm text-blue-700 dark:text-blue-400">
+
+                            <p className="mt-2 text-sm text-gray-800 dark:text-gray-200">
                                 {data.vocab.vocabList.length} / 1000 từ mục tiêu
                             </p>
                         </CardContent>
+
                     </Card>
-                    {/* <NotificationListener userId={data.user.id} /> */}
                 </motion.div>
 
-
                 <motion.div variants={itemVariants}>
-                    <Card className="relative overflow-hidden border-green-300 dark:border-green-800 bg-white dark:bg-gray-950 hover:bg-green-50 dark:hover:bg-green-950/50 transition-all">
-                        <div className="absolute inset-0 bg-gradient-to-br from-green-100/80 to-transparent dark:from-green-900/20 dark:to-transparent pointer-events-none" />
-                        <div className="absolute left-0 top-0 h-full w-1 bg-green-500"></div>
+                    <Card className="relative overflow-hidden border-gray-600 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-200/40 to-transparent dark:from-gray-700/10 dark:to-transparent pointer-events-none" />
+                        <div className="absolute left-0 top-0 h-full w-1 bg-gray-500"></div>
                         <CardHeader className="pb-2 relative">
                             <CardTitle className="flex items-center space-x-2">
-                                <div className="flex justify-center items-center p-1 rounded-md bg-green-100 dark:bg-green-900/30">
-                                    <Calendar className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                <div className="flex justify-center items-center p-1 rounded-md bg-gray-300 dark:bg-gray-700">
+                                    <Calendar className="w-5 h-5 text-gray-900 dark:text-gray-300" />
                                 </div>
-                                <span className="text-green-800 dark:text-green-300 font-bold">Tổng Lượt Ôn Tập</span>
+                                <span className="text-gray-900 dark:text-gray-100 font-bold">Tổng Lượt Ôn Tập</span>
                             </CardTitle>
                             <CardDescription>Số lần bạn đã ôn tập</CardDescription>
                         </CardHeader>
                         <CardContent className="relative">
                             <motion.p
-                                className="text-4xl font-bold !text-green-700 !dark:text-green-300"
+                                className="text-4xl font-bold text-gray-300"
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
-                                style={{ color: 'var(--green-700)', textShadow: 'none' }}
+                                transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
                             >
                                 {data.progress.totalReviews}
                             </motion.p>
-                            <div className="mt-4 flex justify-between items-center">
-                                <p className="text-sm font-medium text-green-700 dark:text-green-400">Tốc độ học:</p>
-                                <Badge className="bg-green-200 text-green-800 hover:bg-green-300 dark:bg-green-800 dark:text-green-200 font-medium">{calculateLearningRate()} từ/ngày</Badge>
-                            </div>
 
+                            <div className="mt-4 flex justify-between items-center">
+                                <p className="text-sm font-medium text-gray-800 dark:text-gray-200">Tốc độ học:</p>
+                                <Badge className="bg-gray-700 text-white font-semibold hover:bg-gray-600">
+                                    {calculateLearningRate()} từ/ngày
+                                </Badge>
+                            </div>
                         </CardContent>
 
                     </Card>
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
-                    <Card className="relative overflow-hidden border-purple-300 dark:border-purple-800 bg-white dark:bg-gray-950 hover:bg-purple-50 dark:hover:bg-purple-950/50 transition-all">
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-100/80 to-transparent dark:from-purple-900/20 dark:to-transparent pointer-events-none" />
-                        <div className="absolute left-0 top-0 h-full w-1 bg-purple-500"></div>
+                    <Card className="relative overflow-hidden border-gray-600 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
+                        <div className="absolute inset-0 bg-gradient-to-br from-gray-200/40 to-transparent dark:from-gray-700/10 dark:to-transparent pointer-events-none" />
+                        <div className="absolute left-0 top-0 h-full w-1 bg-gray-500"></div>
                         <CardHeader className="pb-2 relative">
                             <CardTitle className="flex items-center space-x-2">
-                                <div className="flex justify-center items-center p-1 rounded-md bg-purple-100 dark:bg-purple-900/30">
-                                    <Award className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                                <div className="flex justify-center items-center p-1 rounded-md bg-gray-300 dark:bg-gray-700">
+                                    <Award className="w-5 h-5 text-gray-900 dark:text-gray-300" />
                                 </div>
-                                <span className="text-purple-800 dark:text-purple-300 font-bold">Tiến Độ & Mục Tiêu</span>
+                                <span className="text-gray-900 dark:text-gray-100 font-bold">Tiến Độ & Mục Tiêu</span>
                             </CardTitle>
                             <CardDescription>Tiến độ học của bạn</CardDescription>
                         </CardHeader>
                         <CardContent className="relative">
                             <div className="flex justify-between mb-2">
-                                <span className="text-sm font-medium text-purple-700 dark:text-purple-400">Mục tiêu tiếp theo:</span>
-                                <Badge variant="outline" className="border-purple-400 text-purple-800 hover:bg-purple-300 dark:border-purple-600 dark:text-purple-200 font-medium">{nextMilestone()} từ</Badge>
+                                <span className="text-sm font-medium text-gray-800 dark:text-gray-200">Mục tiêu tiếp theo:</span>
+                                <Badge variant="outline" className="border-gray-500 text-gray-300 font-semibold dark:border-gray-600 hover:bg-gray-700">
+                                    {nextMilestone()} từ
+                                </Badge>
                             </div>
+
                             <Progress
                                 value={(data.vocab.vocabList.length / nextMilestone()) * 100}
-                                className="w-full h-2 bg-purple-100 dark:bg-purple-900/30"
-                                indicatorClassName="bg-purple-600 dark:bg-purple-500"
+                                className="w-full h-2 bg-gray-300 dark:bg-gray-800"
+                                indicatorClassName="bg-gray-300 dark:bg-gray-200"
                             />
 
                             <div className="mt-4 flex justify-between items-center">
-                                <p className="text-sm font-medium text-purple-700 dark:text-purple-400">Hoàn thành dự kiến:</p>
-                                <Badge variant="secondary" className="bg-purple-200 text-purple-800 hover:bg-purple-300 dark:bg-purple-800 dark:text-purple-200 font-medium">{calculateEstimatedCompletion()}</Badge>
+                                <p className="text-sm font-medium text-gray-800 dark:text-gray-200">Hoàn thành dự kiến:</p>
+                                <Badge variant="secondary" className="bg-gray-700 text-white font-semibold hover:bg-gray-600">
+                                    {calculateEstimatedCompletion()}
+                                </Badge>
                             </div>
                         </CardContent>
                     </Card>
                 </motion.div>
+
 
             </motion.div>
 
