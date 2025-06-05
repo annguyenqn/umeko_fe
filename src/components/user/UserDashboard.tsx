@@ -239,7 +239,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                         </CardHeader>
                         <CardContent className="relative">
                             <motion.p
-                                className="text-4xl font-bold text-gray-300"
+                                className="text-4xl font-bold text-gray-500 dark:text-gray-300"
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ type: 'spring', stiffness: 200 }}
@@ -249,7 +249,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
 
                             <Progress
                                 value={(data.vocab.vocabList.length / 1000) * 100}
-                                className="w-full mt-2 h-2 bg-gray-300 dark:bg-gray-800"
+                                className="w-full mt-2 h-2 bg-gray-500 dark:bg-gray-800"
                                 indicatorClassName="bg-gray-300 dark:bg-gray-200"
                             />
 
@@ -276,7 +276,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                         </CardHeader>
                         <CardContent className="relative">
                             <motion.p
-                                className="text-4xl font-bold text-gray-300"
+                                className="text-4xl font-bold text-gray-500 dark:text-gray-300"
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
