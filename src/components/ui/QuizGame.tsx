@@ -120,11 +120,11 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
     };
 
     return (
-        <Card className="w-[850px] max-w-full p-8 mx-auto mb-4 md:mt-28 bg-white text-slate-900 dark:bg-[#303956] dark:text-white shadow-xl rounded-2xl border border-purple-100 dark:border-purple-900/30">
+        <Card className="w-[850px] max-w-full p-8 mx-auto mb-4 md:mt-28 bg-white text-slate-900 dark:bg-[#303956] dark:text-white shadow-xl rounded-2xl border border-slate-200 dark:border-slate-700">
             <CardHeader>
                 <CardTitle className="text-2xl flex flex-col md:flex-row justify-between items-center">
                     <div className="mb-4 md:mb-0">
-                        <h2 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400">
+                        <h2 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-[oklch(0.22_0.03_264.76)] to-[oklch(0.25_0.05_264.76)] dark:from-[oklch(0.45_0.08_264.76)] dark:to-[oklch(0.55_0.12_264.76)]">
                             {"Quiz Từ vựng"}
                         </h2>
                         <p className="text-slate-500 dark:text-slate-400 text-sm">
@@ -136,19 +136,19 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                         value={["hiragana", "meaning_vi"].includes(questionType) ? questionType : "hiragana"}
                         onValueChange={(value) => setQuestionType(value as "hiragana" | "meaning_vi")}
                     >
-                        <SelectTrigger className="w-[160px] text-lg py-3 bg-white text-slate-900 dark:bg-[#3a445f] dark:text-white border border-purple-200 dark:border-purple-800/50 rounded-xl shadow-md">
+                        <SelectTrigger className="w-[160px] text-lg py-3 bg-white text-slate-900 dark:bg-[#3a445f] dark:text-white border border-[oklch(0.22_0.03_264.76)] dark:border-[oklch(0.35_0.06_264.76)] rounded-xl shadow-md">
                             <SelectValue placeholder="Chọn loại câu hỏi" />
                         </SelectTrigger>
-                        <SelectContent className="bg-white text-slate-900 dark:bg-[#3a445f] dark:text-white border border-purple-200 dark:border-purple-800/50 rounded-xl">
-                            <SelectItem value="hiragana" className="focus:bg-purple-50 dark:focus:bg-purple-900/20">
+                        <SelectContent className="bg-white text-slate-900 dark:bg-[#3a445f] dark:text-white border border-[oklch(0.22_0.03_264.76)] dark:border-[oklch(0.35_0.06_264.76)] rounded-xl">
+                            <SelectItem value="hiragana" className="focus:bg-gray-600">
                                 <div className="flex items-center">
-                                    <span className="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>
+                                    <span className="w-2 h-2 bg-[oklch(0.22_0.03_264.76)] rounded-full mr-2"></span>
                                     Furigana
                                 </div>
                             </SelectItem>
-                            <SelectItem value="meaning_vi" className="focus:bg-purple-50 dark:focus:bg-purple-900/20">
+                            <SelectItem value="meaning_vi" className="focus:bg-gray-600">
                                 <div className="flex items-center">
-                                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                                    <span className="w-2 h-2 bg-[oklch(0.22_0.03_264.76)] rounded-full mr-2"></span>
                                     {t("quiz.mean") || "Mean"}
                                 </div>
                             </SelectItem>
@@ -156,17 +156,18 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                     </Select>
                 </CardTitle>
             </CardHeader>
+
             <CardContent>
                 {quizCompleted ? (
                     <div className="text-center py-6 relative overflow-hidden">
 
-                        <h2 className="text-4xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">{t("quiz.resultTitle") || "Result"}</h2>
+                        <h2 className="text-4xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-[oklch(0.35_0.08_264.76)] to-[oklch(0.45_0.12_264.76)]">{t("quiz.resultTitle") || "Result"}</h2>
 
                         <div className="flex flex-col space-y-8 mb-10">
                             {/* Score circle */}
                             <div className="mx-auto relative">
                                 <div className="rounded-full w-48 h-48 flex flex-col items-center justify-center border-8 border-gray-100 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800">
-                                    <span className="text-5xl font-bold text-purple-600 dark:text-purple-400">{correctCount}</span>
+                                    <span className="text-5xl font-bold text-[oklch(0.35_0.08_264.76)] dark:text-[oklch(0.55_0.12_264.76)]">{correctCount}</span>
                                     <span className="text-xl text-gray-500 dark:text-gray-400">/ {vocabItems.length}</span>
                                 </div>
                                 <div className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4 bg-gradient-to-r from-green-400 to-blue-500 text-white text-sm font-bold py-1 px-3 rounded-full">
@@ -214,7 +215,7 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                                         Điểm tuyệt đối! Làm rất tốt!
                                     </span>
                                 ) : correctCount >= vocabItems.length * 0.8 ? (
-                                    <span className="font-medium text-blue-600 dark:text-blue-400">
+                                    <span className="font-medium text-[oklch(0.35_0.08_264.76)] dark:text-[oklch(0.55_0.12_264.76)]">
                                         Làm tốt lắm! Tiếp tục luyện tập nhé!
                                     </span>
                                 ) : correctCount >= vocabItems.length * 0.5 ? (
@@ -232,7 +233,7 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
 
                         <Button
                             onClick={restartQuiz}
-                            className="mt-6 w-full max-w-md mx-auto py-6 text-lg font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                            className="mt-6 w-full max-w-md mx-auto py-6 text-lg font-bold text-white bg-gradient-to-r from-[oklch(0.28_0.06_264.76)] to-[oklch(0.35_0.08_264.76)] hover:from-[oklch(0.25_0.05_264.76)] hover:to-[oklch(0.30_0.07_264.76)] rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
                         >
                             {t("quiz.retry") || "Try Again"}
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -244,13 +245,13 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                     currentQuestion && (
                         <>
                             <div className="relative mb-12">
-                                <p className="text-3xl font-semibold text-center py-8 px-6 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 shadow-md border border-purple-100 dark:border-purple-800">
+                                <p className="text-3xl font-semibold text-center py-8 px-6 rounded-xl bg-gradient-to-r from-[oklch(0.92_0.02_264.76)] to-[oklch(0.90_0.03_264.76)] dark:from-[oklch(0.18_0.04_264.76)] dark:to-[oklch(0.22_0.05_264.76)] shadow-md border border-[oklch(0.85_0.03_264.76)] dark:border-[oklch(0.30_0.06_264.76)]">
                                     {questionType === "hiragana" && currentQuestion.furigana}
                                     {questionType === "meaning_vi" && getLocalized(currentQuestion.mean_vi ?? '', currentQuestion.mean_en ?? '')}
                                 </p>
 
                                 {/* Progress indicator */}
-                                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 rounded-full px-5 py-1.5 bg-white dark:bg-slate-700 border border-purple-200 dark:border-purple-800 shadow-md">
+                                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 rounded-full px-5 py-1.5 bg-white dark:bg-slate-700 border border-[oklch(0.85_0.03_264.76)] dark:border-[oklch(0.30_0.06_264.76)] shadow-md">
                                     <span className="text-sm font-medium">
                                         {questionIndex}/{vocabItems.length}
                                     </span>
@@ -267,7 +268,7 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                                                 ? isCorrect
                                                     ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-200 dark:shadow-green-900/40"
                                                     : "bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-200 dark:shadow-red-900/40"
-                                                : "bg-white dark:bg-slate-800 hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 dark:hover:from-purple-900/30 dark:hover:to-indigo-900/30 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-lg transform hover:scale-[1.02]"}
+                                                : "bg-white dark:bg-slate-800 hover:bg-gradient-to-r hover:from-[oklch(0.95_0.02_264.76)] hover:to-[oklch(0.92_0.03_264.76)] dark:hover:from-[oklch(0.20_0.04_264.76)] dark:hover:to-[oklch(0.18_0.05_264.76)] text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-lg transform hover:scale-[1.02]"}
                                             ${selectedAnswer && !isCorrect && option.vocab === currentQuestion?.vocab
                                                 ? "border-2 border-dashed border-green-400 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 text-green-700 dark:text-green-300"
                                                 : ""}`}
@@ -295,7 +296,7 @@ const QuizGame: React.FC<QuizGameProps> = ({ vocabItems, t, language }) => {
                             {selectedAnswer && !isCorrect && (
                                 <Button
                                     onClick={nextQuestion}
-                                    className="w-full py-6 mt-6 text-lg font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                                    className="w-full py-6 mt-6 text-lg font-medium text-white bg-gradient-to-r from-[oklch(0.28_0.06_264.76)] to-[oklch(0.35_0.08_264.76)] hover:from-[oklch(0.25_0.05_264.76)] hover:to-[oklch(0.30_0.07_264.76)] rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
                                 >
                                     {t("quiz.next") || "Next"}
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
