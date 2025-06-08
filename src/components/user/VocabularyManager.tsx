@@ -10,165 +10,104 @@ import {
     X,
     FileText,
     Star,
-    Calendar,
-    User
 } from 'lucide-react';
+import {
+    createCustomVocabEntry,
+    createCustomVocabSet,
+    getCustomVocabSets,
+    getVocabEntriesBySet,
+    CreateCustomVocabSetDto,
+    CreateCustomVocabEntryDto,
+    CustomVocabSetResponse,
+    deleteCustomVocabSet,
+    deleteCustomVocabEntry,
+} from '@/services/vocab-custom.service';
 
-// Types
-interface CustomVocabEntry {
-    id: string;
-    user_id: string;
-    vocabSet?: CustomVocabSet;
-    word: string;
-    meaning: string;
-    example?: string;
-    difficulty_level: number;
-    created_at: Date;
-}
 
-interface CustomVocabSet {
-    id: string;
-    user_id: string;
-    name: string;
-    description?: string;
-    created_at: Date;
-    entries?: CustomVocabEntry[];
-}
 
-interface User {
-    id: string;
-    name: string;
-    email: string;
-}
-
-// Mock data
-const mockUser: User = {
-    id: '1',
-    name: 'Nguyễn Văn An',
-    email: 'an.nguyen@example.com'
-};
 
 const VocabularyManager: React.FC = () => {
-    const [vocabSets, setVocabSets] = useState<CustomVocabSet[]>([]);
-    const [selectedSet, setSelectedSet] = useState<CustomVocabSet | null>(null);
+    const [vocabSets, setVocabSets] = useState<CustomVocabSetResponse[]>([]);
+    const [selectedSet, setSelectedSet] = useState<CustomVocabSetResponse | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
     const [isCreateSetOpen, setIsCreateSetOpen] = useState(false);
     const [isAddWordOpen, setIsAddWordOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const [newSet, setNewSet] = useState({
-        name: '',
-        description: ''
-    });
-
-    const [newWord, setNewWord] = useState({
+    const [newSet, setNewSet] = useState<CreateCustomVocabSetDto>({ name: '', description: '' });
+    const [newWord, setNewWord] = useState<Omit<CreateCustomVocabEntryDto, 'vocabSetId'>>({
         word: '',
         meaning: '',
         example: '',
-        difficulty_level: 1
+        difficulty_level: 1,
     });
 
-    useEffect(() => {
-        const mockSets: CustomVocabSet[] = [
-            {
-                id: '1',
-                user_id: mockUser.id,
-                name: 'Business English',
-                description: 'Từ vựng kinh doanh cơ bản',
-                created_at: new Date('2024-01-15'),
-                entries: [
-                    {
-                        id: '1',
-                        user_id: mockUser.id,
-                        word: 'negotiate',
-                        meaning: 'đàm phán, thương lượng',
-                        example: 'We need to negotiate the contract terms.',
-                        difficulty_level: 3,
-                        created_at: new Date('2024-01-15')
-                    },
-                    {
-                        id: '2',
-                        user_id: mockUser.id,
-                        word: 'revenue',
-                        meaning: 'doanh thu',
-                        example: "The company's revenue increased by 20% this year.",
-                        difficulty_level: 2,
-                        created_at: new Date('2024-01-16')
-                    }
-                ]
-            },
-            {
-                id: '2',
-                user_id: mockUser.id,
-                name: 'IELTS Vocabulary',
-                description: 'Từ vựng luyện thi IELTS',
-                created_at: new Date('2024-01-20'),
-                entries: []
-            }
-        ];
-        setVocabSets(mockSets);
-    }, []);
-
-    const createVocabSet = () => {
-        if (!newSet.name.trim()) return;
-
-        const vocabSet: CustomVocabSet = {
-            id: Date.now().toString(),
-            user_id: mockUser.id,
-            name: newSet.name,
-            description: newSet.description,
-            created_at: new Date(),
-            entries: []
-        };
-
-        setVocabSets(prev => [...prev, vocabSet]);
-        setNewSet({ name: '', description: '' });
-        setIsCreateSetOpen(false);
+    const fetchSets = async () => {
+        const sets = await getCustomVocabSets();
+        setVocabSets(sets);
     };
 
-    const addWordToSet = () => {
-        if (!selectedSet || !newWord.word.trim() || !newWord.meaning.trim()) return;
+    const fetchEntriesForSelectedSet = async (set: CustomVocabSetResponse) => {
+        const entries = await getVocabEntriesBySet(set.id);
+        setSelectedSet({ ...set, entries });
+    };
 
-        const word: CustomVocabEntry = {
-            id: Date.now().toString(),
-            user_id: mockUser.id,
-            word: newWord.word,
-            meaning: newWord.meaning,
-            example: newWord.example,
-            difficulty_level: newWord.difficulty_level,
-            created_at: new Date()
-        };
+    useEffect(() => {
+        fetchSets();
+    }, []);
 
-        setVocabSets(prev => prev.map(set =>
-            set.id === selectedSet.id
-                ? { ...set, entries: [...(set.entries || []), word] }
-                : set
-        ));
+    const handleSelectSet = async (set: CustomVocabSetResponse) => {
+        await fetchEntriesForSelectedSet(set);
+    };
 
+    const handleCreateSet = async () => {
+        const created = await createCustomVocabSet(newSet);
+        await fetchSets();
+        setNewSet({ name: '', description: '' });
+        setIsCreateSetOpen(false);
+        setSelectedSet(created);
+    };
+
+    const handleAddWord = async () => {
+        if (!selectedSet) return;
+        const created = await createCustomVocabEntry({ ...newWord, vocabSetId: selectedSet.id });
+        setSelectedSet((prev) =>
+            prev ? { ...prev, entries: [...(prev.entries || []), created] } : prev
+        );
         setNewWord({ word: '', meaning: '', example: '', difficulty_level: 1 });
         setIsAddWordOpen(false);
     };
 
-    const deleteVocabSet = (setId: string) => {
-        setVocabSets(prev => prev.filter(set => set.id !== setId));
-        if (selectedSet?.id === setId) {
-            setSelectedSet(null);
-        }
-    };
-
-    const deleteWord = (wordId: string) => {
-        if (!selectedSet) return;
-
-        setVocabSets(prev => prev.map(set =>
-            set.id === selectedSet.id
-                ? { ...set, entries: set.entries?.filter(entry => entry.id !== wordId) || [] }
-                : set
-        ));
-    };
-
-    const filteredWords = selectedSet?.entries?.filter(entry =>
+    const filteredWords = selectedSet?.entries?.filter((entry) =>
         entry.word.toLowerCase().includes(searchTerm.toLowerCase()) ||
         entry.meaning.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
+
+    const handleDeleteSet = async (setId: string) => {
+        try {
+            await deleteCustomVocabSet(setId);
+            if (selectedSet?.id === setId) {
+                setSelectedSet(null);
+            }
+            await fetchSets();
+        } catch (err) {
+            console.error('Lỗi khi xoá bộ từ vựng:', err);
+        }
+    };
+
+    const handleDeleteEntry = async (entryId: string) => {
+        try {
+            await deleteCustomVocabEntry(entryId);
+            setSelectedSet((prev) =>
+                prev
+                    ? {
+                        ...prev,
+                        entries: prev.entries?.filter((entry) => entry.id !== entryId),
+                    }
+                    : prev
+            );
+        } catch (err) {
+            console.error('Lỗi khi xoá từ vựng:', err);
+        }
+    };
 
     const getDifficultyColor = (level: number) => {
         switch (level) {
@@ -180,6 +119,7 @@ const VocabularyManager: React.FC = () => {
             default: return 'bg-gray-500';
         }
     };
+
 
     const containerVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -266,8 +206,8 @@ const VocabularyManager: React.FC = () => {
                                                         )}
                                                         <div className="flex items-center mt-2 space-x-4 text-xs">
                                                             <span className="flex items-center">
-                                                                <Calendar className="w-3 h-3 mr-1" />
-                                                                {set.created_at.toLocaleDateString('vi-VN')}
+                                                                {/* <Calendar className="w-3 h-3 mr-1" />
+                                                                {set.created_at.toLocaleDateString('vi-VN')} */}
                                                             </span>
                                                             <span className="flex items-center">
                                                                 <Star className="w-3 h-3 mr-1" />
@@ -279,7 +219,7 @@ const VocabularyManager: React.FC = () => {
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            deleteVocabSet(set.id);
+                                                            deleteCustomVocabSet(set.id);
                                                         }}
                                                         className={`p-1 rounded hover:bg-red-500 hover:text-white transition-colors ${selectedSet?.id === set.id
                                                             ? 'text-gray-300'
@@ -376,7 +316,7 @@ const VocabularyManager: React.FC = () => {
                                                             </div>
 
                                                             <button
-                                                                onClick={() => deleteWord(entry.id)}
+                                                                onClick={() => deleteCustomVocabEntry(entry.id)}
                                                                 className="p-2 rounded hover:bg-red-500 hover:text-white transition-colors text-gray-500 dark:text-gray-400"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
@@ -470,7 +410,7 @@ const VocabularyManager: React.FC = () => {
                                     Hủy
                                 </button>
                                 <button
-                                    onClick={createVocabSet}
+                                    onClick={handleCreateSet}
                                     disabled={!newSet.name.trim()}
                                     className="flex-1 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-500 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2 transition-colors dark:bg-gray-700 dark:hover:bg-gray-600 dark:disabled:bg-gray-600"
                                 >
@@ -562,8 +502,8 @@ const VocabularyManager: React.FC = () => {
                                                 key={level}
                                                 onClick={() => setNewWord({ ...newWord, difficulty_level: level })}
                                                 className={`w-8 h-8 rounded-full transition-colors text-white font-medium ${newWord.difficulty_level === level
-                                                        ? getDifficultyColor(level)
-                                                        : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-900 dark:text-white'
+                                                    ? getDifficultyColor(level)
+                                                    : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-900 dark:text-white'
                                                     }`}
                                             >
                                                 {level}
@@ -581,7 +521,7 @@ const VocabularyManager: React.FC = () => {
                                     Hủy
                                 </button>
                                 <button
-                                    onClick={addWordToSet}
+                                    onClick={handleAddWord}
                                     disabled={!newWord.word.trim() || !newWord.meaning.trim()}
                                     className="flex-1 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-500 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2 transition-colors dark:bg-gray-700 dark:hover:bg-gray-600 dark:disabled:bg-gray-600"
                                 >
