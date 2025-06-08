@@ -11,7 +11,7 @@ interface Notification {
     read: boolean;
 }
 
-
+const API_BASE = process.env.NEXT_PUBLIC_NEST_API_URL || 'https://umeko.io.vn';
 export default function NotificationListener({ userId }: { userId: string }) {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function NotificationListener({ userId }: { userId: string }) {
     useEffect(() => {
         if (!userId) return;
 
-        fetch(`http://14.225.217.126:8084/Notification?userId=${userId}`)
+        fetch(`${API_BASE}/notification?userId=${userId}`)
             .then((res) => res.json())
             .then((data) => {
                 setNotifications(data);
@@ -64,7 +64,7 @@ export default function NotificationListener({ userId }: { userId: string }) {
         if (!ids.length) return;
 
         try {
-            await fetch(`http://14.225.217.126:8084/Notification/unread-bulk`, {
+            await fetch(`${API_BASE}/notification/unread-bulk`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ids }),
