@@ -3,9 +3,11 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/useAuthStore'
-import type { ComponentType, JSX } from 'react'
-export function withAuth<T extends JSX.IntrinsicAttributes>(Component: ComponentType<T>) {
-    return function ProtectedComponent(props: T) {
+import type { ComponentType, FC } from 'react'
+
+// ✅ FIX: ràng buộc P mở rộng object thay vì IntrinsicAttributes
+export function withAuth<P extends Record<string, unknown>>(Component: ComponentType<P>): FC<P> {
+    const ProtectedComponent: FC<P> = (props) => {
         const router = useRouter()
         const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
@@ -19,4 +21,8 @@ export function withAuth<T extends JSX.IntrinsicAttributes>(Component: Component
 
         return <Component {...props} />
     }
+
+    ProtectedComponent.displayName = `withAuth(${Component.displayName || Component.name || 'Component'})`
+
+    return ProtectedComponent
 }

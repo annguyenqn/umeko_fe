@@ -10,7 +10,9 @@ export function InitAuth() {
     useEffect(() => {
         async function refreshToken() {
             try {
-                const res = await fetch('/api/refresh-token');
+                const res = await fetch('/api/refresh-token', {
+                    credentials: 'include',
+                });
 
                 if (res.ok) {
                     const data = await res.json();
@@ -21,18 +23,23 @@ export function InitAuth() {
                     }
                 }
 
-                // Nếu không ok hoặc không có accessToken → gọi logout
                 console.warn('[InitAuth] Refresh token failed, calling logout...');
-                await fetch('/api/logout', { method: 'POST' });
 
-                // Clear store local state
+                await fetch('/api/refresh-token', {
+                    method: 'POST',
+                    credentials: 'include',
+                });
+
                 clearAccessToken();
                 localStorage.removeItem('accessToken');
 
             } catch (error) {
                 console.error('[InitAuth] Error refreshing token:', error);
-                // Nếu lỗi mạng hoặc lỗi khác cũng gọi logout
-                await fetch('/api/logout', { method: 'POST' });
+
+                await fetch(`${process.env.NEXT_PUBLIC_NEST_API_URL}/logout`, {
+                    method: 'POST',
+                    credentials: 'include',
+                });
 
                 clearAccessToken();
                 localStorage.removeItem('accessToken');
