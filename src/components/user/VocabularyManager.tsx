@@ -15,7 +15,6 @@ import {
     createCustomVocabEntry,
     createCustomVocabSet,
     getCustomVocabSets,
-    getVocabEntriesBySet,
     CreateCustomVocabSetDto,
     CreateCustomVocabEntryDto,
     CustomVocabSetResponse,
@@ -45,18 +44,18 @@ const VocabularyManager: React.FC = () => {
         setVocabSets(sets);
     };
 
-    const fetchEntriesForSelectedSet = async (set: CustomVocabSetResponse) => {
-        const entries = await getVocabEntriesBySet(set.id);
-        setSelectedSet({ ...set, entries });
-    };
+    // const fetchEntriesForSelectedSet = async (set: CustomVocabSetResponse) => {
+    //     const entries = await getVocabEntriesBySet(set.id);
+    //     setSelectedSet({ ...set, entries });
+    // };
 
     useEffect(() => {
         fetchSets();
     }, []);
 
-    const handleSelectSet = async (set: CustomVocabSetResponse) => {
-        await fetchEntriesForSelectedSet(set);
-    };
+    // const handleSelectSet = async (set: CustomVocabSetResponse) => {
+    //     await fetchEntriesForSelectedSet(set);
+    // };
 
     const handleCreateSet = async () => {
         const created = await createCustomVocabSet(newSet);
@@ -81,33 +80,33 @@ const VocabularyManager: React.FC = () => {
         entry.meaning.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
 
-    const handleDeleteSet = async (setId: string) => {
-        try {
-            await deleteCustomVocabSet(setId);
-            if (selectedSet?.id === setId) {
-                setSelectedSet(null);
-            }
-            await fetchSets();
-        } catch (err) {
-            console.error('Lỗi khi xoá bộ từ vựng:', err);
-        }
-    };
+    // const handleDeleteSet = async (setId: string) => {
+    //     try {
+    //         await deleteCustomVocabSet(setId);
+    //         if (selectedSet?.id === setId) {
+    //             setSelectedSet(null);
+    //         }
+    //         await fetchSets();
+    //     } catch (err) {
+    //         console.error('Lỗi khi xoá bộ từ vựng:', err);
+    //     }
+    // };
 
-    const handleDeleteEntry = async (entryId: string) => {
-        try {
-            await deleteCustomVocabEntry(entryId);
-            setSelectedSet((prev) =>
-                prev
-                    ? {
-                        ...prev,
-                        entries: prev.entries?.filter((entry) => entry.id !== entryId),
-                    }
-                    : prev
-            );
-        } catch (err) {
-            console.error('Lỗi khi xoá từ vựng:', err);
-        }
-    };
+    // const handleDeleteEntry = async (entryId: string) => {
+    //     try {
+    //         await deleteCustomVocabEntry(entryId);
+    //         setSelectedSet((prev) =>
+    //             prev
+    //                 ? {
+    //                     ...prev,
+    //                     entries: prev.entries?.filter((entry) => entry.id !== entryId),
+    //                 }
+    //                 : prev
+    //         );
+    //     } catch (err) {
+    //         console.error('Lỗi khi xoá từ vựng:', err);
+    //     }
+    // };
 
     const getDifficultyColor = (level: number) => {
         switch (level) {
