@@ -514,7 +514,7 @@ export default function UserDashboard({ data }: UserDashboardProps) {
                                             <YAxis />
                                             <Tooltip
                                                 formatter={(value) => [`${value} từ`, 'Số từ ôn tập']}
-                                                contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                                contentStyle={{ backgroundColor: '#fff', color: 'black', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                             />
                                             <Legend />
                                             <Line
