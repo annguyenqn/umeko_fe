@@ -23,6 +23,7 @@ export default function Home() {
       <BackgroundBeams className="z-0" />
       <Head>
         <title>Umeko - Học tiếng Nhật hiệu quả với Kanji, Từ vựng và SRS</title>
+        <meta name="google-site-verification" content="U3uJrUiMoseqjeZSfZzXDzYLI-amhX7T0zbcWJcf2C8" />
         <meta name="description" content="Umeko giúp bạn học tiếng Nhật hiệu quả qua Kanji, từ vựng thực tế và hệ thống SRS thông minh." />
         <meta name="keywords" content="học tiếng Nhật, kanji, từ vựng tiếng Nhật, SRS, umeko" />
         <meta name="robots" content="index, follow" />
