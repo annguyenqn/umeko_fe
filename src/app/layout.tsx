@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 import { InitAuth } from "@/components/auth/InitAuth";
 import { Metadata } from "next";
+import Script from 'next/script';
+
 // import { useAuthStore } from "@/store/useAuthStore";
 // import { useEffect } from "react";
 export const metadata: Metadata = {
@@ -17,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Umeko - Japanese Vocabulary & Kanji Learning",
     description: "Effective Japanese learning with flashcards and spaced repetition for JLPT levels N5 to N1.",
-    url: "https://your-umeko-domain.com", // Replace with your actual domain
+    url: "https://umeko.io.vn", // Replace with your actual domain
     siteName: "Umeko",
     images: [
       {
@@ -36,7 +38,7 @@ export const metadata: Metadata = {
     description: "Study JLPT N5-N1 with Umeko’s flashcards and spaced repetition system.",
   },
   alternates: {
-    canonical: "https://your-umeko-domain.com",
+    canonical: "https://umeko.io.vn",
   },
   robots: {
     index: true,
@@ -59,6 +61,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Google Analytics Script */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-ZF5LVEF05L"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-ZF5LVEF05L');
+          `}
+        </Script>
+      </head>
       <body className={inter.className}>
         <main>
           <Providers>

@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/container"
 import { useLanguage } from "@/contexts/LanguageContext"
 import Link from "next/link"
 import dynamic from "next/dynamic"
+import Head from "next/head";
 
 // Tải động BackgroundBeams với kiểu rõ ràng
 const BackgroundBeams = dynamic(
@@ -20,6 +21,17 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <BackgroundBeams className="z-0" />
+      <Head>
+        <title>Umeko - Học tiếng Nhật hiệu quả với Kanji, Từ vựng và SRS</title>
+        <meta name="description" content="Umeko giúp bạn học tiếng Nhật hiệu quả qua Kanji, từ vựng thực tế và hệ thống SRS thông minh." />
+        <meta name="keywords" content="học tiếng Nhật, kanji, từ vựng tiếng Nhật, SRS, umeko" />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Umeko - Nền tảng học tiếng Nhật hiện đại" />
+        <meta property="og:description" content="Học từ vựng, Kanji và luyện tập lặp lại ngắt quãng (SRS) với Umeko." />
+        <meta property="og:image" content="https://umeko.io.vn/og-image.jpg" />
+        <meta property="og:url" content="https://umeko.io.vn/" />
+        <link rel="canonical" href="https://umeko.io.vn/" />
+      </Head>
       <main className="flex-1" role="main">
         {/* Hero Section */}
         <section className="relative w-full py-12 md:py-24 lg:py-32" aria-labelledby="hero-title">

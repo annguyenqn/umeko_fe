@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://umeko.io.vn
+
+# Sitemaps
+Sitemap: https://umeko.io.vn/sitemap.xml
