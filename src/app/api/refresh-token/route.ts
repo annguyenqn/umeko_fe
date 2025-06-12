@@ -8,11 +8,23 @@ export async function GET() {
 
   if (!refreshToken) {
     console.log('[REFRESH] No refresh token found in cookies');
-    return NextResponse.json({ message: 'No refresh token' }, { status: 401 });
+
+    const response = NextResponse.json(
+      { message: 'No refresh token', shouldLogout: true },
+      { status: 401 }
+    );
+
+    // Xóa refreshToken nếu có
+    response.cookies.set('refreshToken', '', {
+      path: '/',
+      maxAge: 0,
+    });
+
+    return response;
   }
 
   console.log('[REFRESH] Using refresh token from cookie');
-  
+
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_NEST_API_URL}/auth/refresh`, {
       method: 'POST',
@@ -24,28 +36,47 @@ export async function GET() {
 
     if (!res.ok) {
       console.log('[REFRESH] Token refresh failed:', data);
-      return NextResponse.json(data, { status: res.status });
+
+      const response = NextResponse.json(
+        { message: 'Token refresh failed', shouldLogout: true },
+        { status: res.status }
+      );
+
+      response.cookies.set('refreshToken', '', {
+        path: '/',
+        maxAge: 0,
+      });
+
+      return response;
     }
 
-    // If you need to update the refresh token as well, use NextResponse to set cookies
+    // Nếu có refreshToken mới thì cập nhật cookie
+    const response = NextResponse.json({ accessToken: data.accessToken });
+
     if (data.refreshToken) {
-      const response = NextResponse.json({ accessToken: data.accessToken });
-      
       response.cookies.set('refreshToken', data.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production' || false,
         sameSite: 'lax',
         path: '/',
-        maxAge: 7 * 24 * 60 * 60, // 7 days
+        maxAge: 7 * 24 * 60 * 60, // 7 ngày
       });
-      
-      return response;
     }
 
-    // If no new refresh token is provided, just return the access token
-    return NextResponse.json({ accessToken: data.accessToken });
+    return response;
   } catch (error) {
     console.error('[REFRESH] Error during token refresh:', error);
-    return NextResponse.json({ message: 'Failed to refresh token' }, { status: 500 });
+
+    const response = NextResponse.json(
+      { message: 'Failed to refresh token', shouldLogout: true },
+      { status: 500 }
+    );
+
+    response.cookies.set('refreshToken', '', {
+      path: '/',
+      maxAge: 0,
+    });
+
+    return response;
   }
 }
