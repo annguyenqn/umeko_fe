@@ -138,7 +138,6 @@ const ReviewPage: React.FC = () => {
     // Submit all reviews in queue
     // Kiểm tra lại implementation của submitManyReviews trong review.service.ts
     const submitReviews = async (reviews: { vocabId: string; result: ReviewResult }[]) => {
-        console.log('[COMPONENT] Calling submitReviews with:', reviews);
 
         // Đảm bảo có ít nhất một review để gửi
         if (!reviews || reviews.length === 0) {
@@ -147,10 +146,7 @@ const ReviewPage: React.FC = () => {
         }
 
         try {
-            // Gọi API từ service
-            console.log('[COMPONENT] Calling API submitManyReviews');
             const result = await apiSubmitReviews(reviews);
-            console.log('[COMPONENT] API response:', result);
             return result;
         } catch (error) {
             console.error('[COMPONENT] Error in submitReviews:', error);

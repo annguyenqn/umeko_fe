@@ -55,7 +55,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       login: async (email, password, router) => {
-        const result = await loginService({ email, password }) // Gọi API Next.js => lưu refreshToken vào cookie server
+        const result = await loginService({ email, password }) 
         localStorage.setItem('accessToken', result.accessToken)
         set({ accessToken: result.accessToken })
 
@@ -66,7 +66,7 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         try {
-          await logoutService() // Gọi API Next.js để xóa cookie server
+          await logoutService() 
         } catch (err) {
           console.error('Logout lỗi:', err)
         }
