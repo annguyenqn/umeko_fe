@@ -14,6 +14,8 @@ import { createLoginSchema, type LoginFormData } from "@/lib/validations/auth"
 import { toast } from "sonner"
 import { useAuthStore } from "@/store/useAuthStore"
 import { useRouter } from 'next/navigation'
+import { GoogleLoginButton } from '@/components/auth/GoogleLoginButton';
+
 
 const nunito = Nunito({ subsets: ["latin"] })
 export function LoginForm() {
@@ -148,6 +150,19 @@ export function LoginForm() {
                         t('login.submit')
                     )}
                 </Button>
+                <div className="relative my-2">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-muted"></div>
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-background px-2 text-muted-foreground">Hoặc</span>
+                    </div>
+                </div>
+
+                {/* Nút đăng nhập Google */}
+                <div className="flex justify-center">
+                    <GoogleLoginButton />
+                </div>
                 <p className={`${nunito.className} text-center text-sm text-muted-foreground`}>
                     {t('login.noAccount')}{" "}
                     <Link href="/signup" className="font-semibold text-primary hover:text-primary/80 hover:underline">

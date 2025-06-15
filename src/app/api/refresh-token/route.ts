@@ -22,9 +22,6 @@ export async function GET() {
 
     return response;
   }
-
-  console.log('[REFRESH] Using refresh token from cookie');
-
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_NEST_API_URL}/auth/refresh`, {
       method: 'POST',

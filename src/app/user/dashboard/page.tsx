@@ -21,8 +21,6 @@ function DashboardPage() {
     }, [fetchUserDetails]);
 
     const data = useUserDashboardStore((s) => s.data);
-    console.log('this is data', data);
-
 
     // Check if user has any vocabulary data
     const hasVocabData = data &&

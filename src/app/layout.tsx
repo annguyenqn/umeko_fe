@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 import { InitAuth } from "@/components/auth/InitAuth";
 import { Metadata } from "next";
 import Script from 'next/script';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // import { useAuthStore } from "@/store/useAuthStore";
 // import { useEffect } from "react";
@@ -82,7 +83,9 @@ export default function RootLayout({
             <Navigation />
             <Toaster richColors />
             <InitAuth />
-            {children}
+            <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+              {children}
+            </GoogleOAuthProvider>
           </Providers>
         </main>
       </body>
