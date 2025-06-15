@@ -52,7 +52,7 @@ export default function Home() {
               </div>
               <div className="flex flex-col sm:flex-row gap-4 sm:space-x-4">
                 <Button asChild size="lg" className="w-full sm:w-auto">
-                  <Link href="/signup">{getText('hero.startLearning', 'Start Learning')}</Link>
+                  <Link href="/user/dashboard">{getText('hero.startLearning', 'Start Learning')}</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild className="w-full sm:w-auto">
                   <Link href="/about">{getText('hero.learnMore', 'Learn More')}</Link>
@@ -169,7 +169,7 @@ export default function Home() {
                 {getText('cta.subtitle', 'Join now and begin your Japanese journey.')}
               </p>
               <Button asChild size="lg" className="w-full sm:w-auto">
-                <Link href="/signup">{getText('cta.button', 'Sign Up Now')}</Link>
+                <Link href="/user/dashboard">{getText('cta.button', 'Sign Up Now')}</Link>
               </Button>
             </div>
           </Container>

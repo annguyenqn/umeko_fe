@@ -37,9 +37,9 @@ export function Navigation() {
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex md:items-center md:gap-6">
                         <nav className="flex gap-6">
-                            <Link href="/kanji" className="text-sm font-medium text-muted-foreground hover:text-primary">
+                            {/* <Link href="/kanji" className="text-sm font-medium text-muted-foreground hover:text-primary">
                                 {t('nav.kanji')}
-                            </Link>
+                            </Link> */}
                             <Link href="/vocabulary" className="text-sm font-medium text-muted-foreground hover:text-primary">
                                 {t('nav.vocabulary')}
                             </Link>
@@ -110,9 +110,9 @@ export function Navigation() {
                 {isMenuOpen && (
                     <div className="border-t md:hidden">
                         <div className="flex flex-col space-y-4 p-4">
-                            <Link href="/kanji" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
+                            {/* <Link href="/kanji" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
                                 {t('nav.kanji')}
-                            </Link>
+                            </Link> */}
                             <Link href="/vocabulary" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-primary">
                                 {t('nav.vocabulary')}
                             </Link>
