@@ -4,12 +4,10 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { useState } from 'react';
 
 export const GoogleLoginButton = () => {
     const { setAccessToken, fetchUser } = useAuthStore();
     const router = useRouter();
-    const [loading, setLoading] = useState(false);
 
     return (
         <GoogleLogin
@@ -17,7 +15,6 @@ export const GoogleLoginButton = () => {
                 const id_token = credentialResponse.credential;
                 if (!id_token) return;
 
-                setLoading(true);
 
                 try {
                     const res = await fetch('/api/social-login', {
@@ -44,7 +41,6 @@ export const GoogleLoginButton = () => {
                         description: err.message,
                     });
                 } finally {
-                    setLoading(false);
                 }
             }}
             onError={() => {

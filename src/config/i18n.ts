@@ -173,7 +173,7 @@ export const translations = {
   },
   vi: {
     nav: {
-      kanji: 'Chữ Hán',
+      // kanji: 'Chữ Hán',
       vocabulary: 'Từ Vựng',
       study: 'Học Tập',
       login: 'Đăng Nhập',
