@@ -56,7 +56,7 @@ export function Navigation() {
                                         <DropdownMenuTrigger asChild>
                                             <div className="flex items-center gap-2 cursor-pointer">
                                                 <Avatar>
-                                                    <AvatarImage src="images/avatarDefault.png" alt="avatar" />
+                                                    <AvatarImage src={user.avatar} alt="avatar" />
                                                     <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
                                                 </Avatar>
                                                 <span className="text-sm font-medium">{user.firstName}</span>
