@@ -36,7 +36,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
     const { addToReviewQueue } = useInitReviewBatch();
     const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
     const getLocalizedContent = (vi: string, en: string) => language === "vi" ? vi : en;
-    
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             // bắt buộc trigger getVoices
@@ -56,8 +56,15 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
 
     const getJapaneseVoice = (): SpeechSynthesisVoice | null => {
         const voices = speechSynthesis.getVoices();
-        return voices.find(v => v.lang === 'ja-JP') || null;
+        return (
+            voices.find(v => v.lang === 'ja-JP' && v.name.toLowerCase().includes('google')) || // Chrome
+            voices.find(v => v.lang === 'ja-JP' && v.name.includes('Kyoko')) ||                // iOS
+            voices.find(v => v.lang === 'ja-JP') ||                                            // fallback
+            null
+        );
     };
+
+
 
 
 
@@ -73,19 +80,22 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
             speechSynthesis.speak(utterance);
         };
 
+        // Toggle stop nếu đang phát chính từ đó
         if (currentPlayingId === id && speechSynthesis.speaking) {
             speechSynthesis.cancel();
             setCurrentPlayingId(null);
             return;
         }
 
+        // Nếu đang phát từ khác → hủy và delay
         if (currentPlayingId && currentPlayingId !== id) {
             speechSynthesis.cancel();
-            setTimeout(speak, 100); // delay nhỏ để tránh conflict
+            setTimeout(speak, 100);
         } else {
             speak();
         }
     }, [currentPlayingId]);
+
 
 
 
