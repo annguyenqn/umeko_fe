@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "../components/ui/Dialog";
 import { Volume, Volume2, Image as ImageIcon, Book, Plus, CheckCircle2 } from "lucide-react";
 import { Vocabulary } from "@/types/Vocab";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { LearningStatus } from "@/types/User";
@@ -36,6 +36,16 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
     const { addToReviewQueue } = useInitReviewBatch();
     const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
     const getLocalizedContent = (vi: string, en: string) => language === "vi" ? vi : en;
+    
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // bắt buộc trigger getVoices
+            speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => {
+                speechSynthesis.getVoices();
+            };
+        }
+    }, []);
 
     const handleAddVocab = (vocabId: string) => {
         const updatedVocabIds = new Set(addedVocabIds);
@@ -44,40 +54,39 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
         addToReviewQueue(vocabId);
     };
 
-    const isIOS = () => {
-        if (typeof window === 'undefined') return false;
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    const getJapaneseVoice = (): SpeechSynthesisVoice | null => {
+        const voices = speechSynthesis.getVoices();
+        return voices.find(v => v.lang === 'ja-JP') || null;
     };
 
 
 
     const playTTSMobileSafe = useCallback((text: string, id: string) => {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ja-JP';
-        utterance.onend = () => setCurrentPlayingId(null);
+        const voice = getJapaneseVoice();
 
-        // Nếu đang phát chính nó → cancel để stop
-        if (currentPlayingId === id && window.speechSynthesis.speaking) {
-            window.speechSynthesis.cancel();
+        const speak = () => {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP';
+            if (voice) utterance.voice = voice;
+            utterance.onend = () => setCurrentPlayingId(null);
+            setCurrentPlayingId(id);
+            speechSynthesis.speak(utterance);
+        };
+
+        if (currentPlayingId === id && speechSynthesis.speaking) {
+            speechSynthesis.cancel();
             setCurrentPlayingId(null);
             return;
         }
 
-        // Nếu đang phát cái khác → cancel cái cũ
         if (currentPlayingId && currentPlayingId !== id) {
-            window.speechSynthesis.cancel();
-        }
-
-        setCurrentPlayingId(id);
-
-        if (isIOS()) {
-            setTimeout(() => {
-                window.speechSynthesis.speak(utterance);
-            }, 150);
+            speechSynthesis.cancel();
+            setTimeout(speak, 100); // delay nhỏ để tránh conflict
         } else {
-            window.speechSynthesis.speak(utterance);
+            speak();
         }
     }, [currentPlayingId]);
+
 
 
     // const playTTS = useCallback((text: string, id: string) => {
