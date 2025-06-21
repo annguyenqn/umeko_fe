@@ -5,14 +5,12 @@ export interface User{
     refreshToken: string
     firstName: string
     lastName: string
-    role: 'user' | 'admin' // hoặc string nếu không rõ toàn bộ role
+    // role: 'user' | 'admin' 
     isEmailVerified: boolean
     avatar?: string
-    createdAt: string // ISO date string
-    updatedAt: string
+    // createdAt: string 
+    // updatedAt: string
   }
-
-
 
 export interface BasicUser {
   id: string;

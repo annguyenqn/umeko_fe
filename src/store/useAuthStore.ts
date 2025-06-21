@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { loginService, logoutService } from '@/services/auth.service'
 import { User } from '@/types/User'
-import { getUserDetails } from '@/services/user.service'
+import { getUser } from '@/services/user.service'
 
 interface AuthState {
   user: User | null
@@ -31,20 +31,12 @@ export const useAuthStore = create<AuthState>()(
 
       fetchUser: async () => {
         try {
-          const data = await getUserDetails()
+          const data = await getUser()
           set({
             user: {
               ...data,
               // avatar: data.avatarUrl || data.avatar,
-              id: data.user.id,
-              email: '',
-              refreshToken: '',
-              firstName: '',
-              lastName: '',
-              role: 'user',
-              isEmailVerified: false,
-              createdAt: '',
-              updatedAt: ''
+
             },
             isAuthenticated: true,
             loading: false,
