@@ -38,21 +38,18 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
     const getLocalizedContent = (vi: string, en: string) => language === "vi" ? vi : en;
 
     const handleAddVocab = (vocabId: string) => {
-        // Cập nhật trạng thái addedVocabIds
         const updatedVocabIds = new Set(addedVocabIds);
-        updatedVocabIds.add(vocabId); // Thêm từ vựng vào Set
-
-        // Lưu trạng thái vào Zustand
+        updatedVocabIds.add(vocabId);
         setAddedVocabIds(updatedVocabIds);
-
-        // Gọi hàm addToReviewQueue
         addToReviewQueue(vocabId);
     };
 
     const isIOS = () => {
         if (typeof window === 'undefined') return false;
-        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
     };
+
+
 
     const playTTSMobileSafe = useCallback((text: string, id: string) => {
         const utterance = new SpeechSynthesisUtterance(text);
