@@ -49,20 +49,53 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
         addToReviewQueue(vocabId);
     };
 
+    const isIOS = () => {
+        if (typeof window === 'undefined') return false;
+        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+    };
 
-    const playTTS = useCallback((text: string, id: string) => {
-        window.speechSynthesis.cancel();
-        if (currentPlayingId === id) {
+    const playTTSMobileSafe = useCallback((text: string, id: string) => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ja-JP';
+        utterance.onend = () => setCurrentPlayingId(null);
+
+        // Nếu đang phát chính nó → cancel để stop
+        if (currentPlayingId === id && window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
             setCurrentPlayingId(null);
             return;
         }
 
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ja-JP';
-        utterance.onend = () => setCurrentPlayingId(null);
+        // Nếu đang phát cái khác → cancel cái cũ
+        if (currentPlayingId && currentPlayingId !== id) {
+            window.speechSynthesis.cancel();
+        }
+
         setCurrentPlayingId(id);
-        window.speechSynthesis.speak(utterance);
+
+        if (isIOS()) {
+            setTimeout(() => {
+                window.speechSynthesis.speak(utterance);
+            }, 150);
+        } else {
+            window.speechSynthesis.speak(utterance);
+        }
     }, [currentPlayingId]);
+
+
+    // const playTTS = useCallback((text: string, id: string) => {
+    //     window.speechSynthesis.cancel();
+    //     if (currentPlayingId === id) {
+    //         setCurrentPlayingId(null);
+    //         return;
+    //     }
+
+    //     const utterance = new SpeechSynthesisUtterance(text);
+    //     utterance.lang = 'ja-JP';
+    //     utterance.onend = () => setCurrentPlayingId(null);
+    //     setCurrentPlayingId(id);
+    //     window.speechSynthesis.speak(utterance);
+    // }, [currentPlayingId]);
 
     const playAudio = useCallback((soundLink: string | undefined, vocabText: string, id: string) => {
         if (currentPlayingId === id) {
@@ -70,23 +103,21 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
             return;
         }
 
-        // If sound_link is empty or undefined, use TTS instead
         if (!soundLink) {
-            playTTS(vocabText, id);
+            playTTSMobileSafe(vocabText, id);
             return;
         }
 
-        // Otherwise play the audio file
         const dynamicAudio = new Audio(soundLink);
         dynamicAudio.play().then(() => {
             setCurrentPlayingId(id);
             dynamicAudio.onended = () => setCurrentPlayingId(null);
         }).catch((err) => {
             console.error("Audio playback error:", err);
-            // Fallback to TTS on error
-            playTTS(vocabText, id);
+            playTTSMobileSafe(vocabText, id);
         });
-    }, [currentPlayingId, playTTS]);
+    }, [currentPlayingId, playTTSMobileSafe]);
+
 
     const getStatusColor = (status: LearningStatus) => {
         switch (status) {
@@ -214,7 +245,7 @@ export const VocabLessonContent: React.FC<Props> = ({ vocabList, t, language, le
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => playTTS(ex.example_text, `example-${word.id}-${index}`)}
+                                                    onClick={() => playTTSMobileSafe(ex.example_text, `example-${word.id}-${index}`)}
                                                     aria-label="Play example pronunciation"
                                                     className="hover:bg-accent rounded-full"
                                                 >
