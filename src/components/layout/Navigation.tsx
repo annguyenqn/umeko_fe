@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, LogOut, SquareUserRound } from 'lucide-react'
+import { Menu, X, LogOut, SquareUserRound, NotebookPen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Container } from '@/components/ui/container'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
@@ -70,7 +70,7 @@ export function Navigation() {
                                             </DropdownMenuItem>
                                             <DropdownMenuItem asChild>
                                                 <Link href="/user/vocab-custom" className="w-full flex gap-2">
-                                                    <SquareUserRound /> {'Tạo bộ từ vựng'}
+                                                    <NotebookPen /> {'Tạo bộ từ vựng'}
                                                 </Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={logout} className="gap-2 text-destructive">
