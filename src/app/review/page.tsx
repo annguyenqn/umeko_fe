@@ -605,7 +605,7 @@ const ReviewPage: React.FC = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <Button
                                     variant="destructive"
-                                    className="flex-1 gap-2"
+                                    className="flex-1 gap-2 text-white hover:bg-red-700"
                                     onClick={() => handleReview('again')}
                                     disabled={isTransitioning}
                                 >
@@ -613,7 +613,7 @@ const ReviewPage: React.FC = () => {
                                 </Button>
                                 <Button
                                     variant="secondary"
-                                    className="flex-1 gap-2"
+                                    className="flex-1 gap-2 hover:bg-gray-200"
                                     onClick={() => handleReview('good')}
                                     disabled={isTransitioning}
                                 >
