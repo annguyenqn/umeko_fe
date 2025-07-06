@@ -1,0 +1,30 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [master]  # Hoặc "main" nếu bạn dùng nhánh main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no root@14.225.217.126 << 'EOF'
+            cd /projects/umeko_fe || exit
+            git stash
+            git pull origin master
+            git stash pop
+            npm install --legacy-peer-deps
+            npm run build
+            pm2 restart umeko_fe
+          EOF
