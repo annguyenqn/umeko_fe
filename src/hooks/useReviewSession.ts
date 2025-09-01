@@ -10,10 +10,6 @@ interface UseReviewSessionOptions {
   defaultSelectedCount?: number;
 }
 
-interface SubmitResult {
-  success: boolean;
-  message?: string;
-}
 
 export function useReviewSession(options?: UseReviewSessionOptions) {
   const { defaultSelectedCount = 10 } = options ?? {};
@@ -68,19 +64,19 @@ export function useReviewSession(options?: UseReviewSessionOptions) {
     }
   }, [selectedWordCount]);
 
-  const submitReviews = useCallback(async (reviews: Array<{ vocabId: string; result: ReviewResult }>): Promise<SubmitResult> => {
-    if (!reviews || reviews.length === 0) {
-      return { success: false, message: 'No reviews to submit' };
-    }
+ const submitReviews = useCallback(
+  async (
+    reviews: Array<{ vocabId: string; result: ReviewResult }>
+  ): Promise<void> => {
+    if (!reviews?.length) return;
     try {
-      const result = await apiSubmitReviews(reviews);
-      return result as SubmitResult;
-    } catch (error) {
-      // eslint-disable-next-line no-console
+      await apiSubmitReviews(reviews);
+    } catch (error: unknown) {
       console.error('[COMPONENT] Error in submitReviews:', error);
-      return { success: false, message: 'Submit failed' };
     }
-  }, []);
+  },
+  []
+);
 
   const startReviewSession = useCallback(async (): Promise<void> => {
     setIsLoading(true);
